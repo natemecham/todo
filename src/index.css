@@ -20,8 +20,14 @@ li{
   margin:0 0 5px;
   padding:5px;
 }
-.on{
-  background-color:;
+.on:after{
+	content: '';
+	position: absolute;
+	width: 100%;
+	bottom: 0;
+	left: 0;
+	height: 0;
+	border-bottom:3px #7addfb solid;
 }
 
 li:nth-of-type(even){
@@ -34,5 +40,6 @@ li.complete{
 }
 
 button{
+	position: relative;
   margin:5px;
 }

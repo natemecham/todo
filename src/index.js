@@ -3,46 +3,49 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 
-function TodoListItem(props){
-	const isComplete = props.isComplete ? 'complete' : 'incomplete';
-	const i = props.id;
-	let list_item = null;
+const TodoListItem = (props) => {
+	const {isComplete,id,onChange,text} = props;
+	const isCompleteClass = isComplete ? 'complete' : 'incomplete';
 	
-	list_item = <li className={ isComplete + ' todo_item'}>
-				
-				<input type="checkbox" checked={props.isComplete} value={i} onChange={props.onChange}/>
-				{props.text}
-			
-			</li>;
-			
-	return(list_item);
+	return(<li className={ isCompleteClass + ' todo_item'}>	
+				<input type="checkbox" checked={isComplete} value={id} onChange={onChange}/>
+				{text}
+			</li>
+		);
 			
 }//end TodoListItem
 
-function TodoList(props){
-	
-	const list = props.list;
-	const onChange = props.onChange;
-	const show = props.show;
-	const todo_list = list.map((data, index) => {
-				if(show === -1 || show == data.isComplete){
-				return <TodoListItem key={index} id={index} text={data.text} isComplete={data.isComplete} onChange={()=>onChange(index)}/>;
-				}
-			});
-	
+const TodoList = (props) => {
+	const {list,onChange,show} = props;	
+			
 	return(
 		<ul>
-			{todo_list}
-		</ul>	
-	);
-}
+			{
+				list.filter((data) => {
+				switch (show){
+					case 'all':
+						return true;
+					case 'active':
+						return !data.isComplete;
+					case 'complete':
+						return data.isComplete;
+					default:
+						return false;
+				}
+			}).map((data,index) => {
+				return <TodoListItem key={index} id={index} text={data.text} isComplete={data.isComplete} onChange={ () => onChange(index)}/>;
+				})
+			}
+		</ul>);
+}//end TodoList
 
 
-function Input(props){
+const Input = (props) => {
+	const {handleSubmit,input,handleChange} = props;
 	return(
-		<div className="form_wrapper" onSubmit={props.handleSubmit}>
+		<div className="form_wrapper" onSubmit={handleSubmit}>
 			<form name="new_todo">
-				<input type="text" value={props.input} onChange={props.handleChange} />
+				<input type="text" value={input} onChange={handleChange} />
 				<input type="submit" value="Add" />
 			</form>
 		</div>
@@ -50,22 +53,20 @@ function Input(props){
 }
 
 function Toggle(props){
-	let count = 0;
-	const count_list = props.count;
-	for(let i = 0; i < count_list.length; i++){
-		if(!count_list[i].isComplete){
-			count ++;
-		}
-	}
+	const {todo, onClick, onClearClick} = props;
+	
+	const activeTodoCount = todo.reduce( (sum,todo ) => {
+		return sum + (!todo.isComplete ? 1 : 0);
+	},0);
+	
 	
 	return(
 		<div className="toggle">
-			
-			<button className={props.show === -1 ? ' on ' : ''} onClick={() => props.onClick(-1)}>All</button>
-			<button className={props.show === 0 ? ' on ' : ''} onClick={() => props.onClick(0)}>Active</button>
-			<button className={props.show === 1 ? ' on ' : ''} onClick={() => props.onClick(1)}>Complete</button>
-			<button onClick={props.onClearClick}>Clear Complete</button>
-			<p>Left To-Do:{count}</p>
+			<button className={props.show === 'all' ? ' on ' : ''} onClick={() => onClick('all')}>All</button>
+			<button className={props.show === 'active' ? ' on ' : ''} onClick={() => onClick('active')}>Active</button>
+			<button className={props.show === 'complete' ? ' on ' : ''} onClick={() => onClick('complete')}>Complete</button>
+			<button onClick={onClearClick}>Clear Complete</button>
+			<p>Left To-Do:{activeTodoCount}</p>
 		</div>	
 	);
 }
@@ -76,21 +77,21 @@ class App extends React.Component {
 		this.state = {
 			input: '',
 			todo: new Array(0),
-			show:-1	
+			show:'all'	
 		}
 		
-		this.handleChange = this.handleChange.bind(this);
-		this.handleSubmit = this.handleSubmit.bind(this);
-		this.handleCheck = this.handleCheck.bind(this);
-		this.handleClearClick = this.handleClearClick.bind(this);
+		//this.handleChange = this.handleChange.bind(this);
+		//this.handleSubmit = this.handleSubmit.bind(this);
+		//this.handleCheck = this.handleCheck.bind(this);
+		//this.handleClearClick = this.handleClearClick.bind(this);
 		
 	}
 	
-	handleChange(e){
+	handleChange = (e) => {
 		this.setState({input: e.target.value});
 	}
 	
-	handleSubmit(e){
+	handleSubmit = (e) => {
 		e.preventDefault();
 		const input = this.state.input;
 		if(input){
@@ -108,17 +109,17 @@ class App extends React.Component {
 		}
 	}
 	
-	handleCheck(i){
+	handleCheck = (i) => {
 		const new_todo = this.state.todo.slice();
 		new_todo[i].isComplete = !new_todo[i].isComplete;
 		this.setState({todo:new_todo});
 	}
 	
-	handleShow(i){
+	handleShow = (i) => {
 		this.setState({show:i});
 	}
 	
-	handleClearClick(){
+	handleClearClick = () => {
 		const new_todo = this.state.todo.slice();
 		for(let i=new_todo.length - 1; i >= 0 ; i--){
 			if(new_todo[i].isComplete){
@@ -135,7 +136,7 @@ class App extends React.Component {
 				<h1>Do These Things</h1>
 				<Input input={this.state.input} handleChange={this.handleChange} handleSubmit={this.handleSubmit} />
 				<TodoList list={this.state.todo} show={this.state.show} onChange={(i)=>this.handleCheck(i)}/>
-				<Toggle	onClick={(i) => this.handleShow(i)} show={this.state.show} onClearClick={this.handleClearClick} count={this.state.todo}/>
+				<Toggle	onClick={(i) => this.handleShow(i)} show={this.state.show} onClearClick={this.handleClearClick} todo={this.state.todo}/>
 			</div>
 		);	
 	}
