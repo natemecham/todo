@@ -26,7 +26,7 @@ const TodoListItem = (props) => {
 }//end TodoListItem
 
 const TodoList = (props) => {
-	const {list,onChange,show,handleDropDown,isMenuOpen,onDelete} = props;	
+	const {list,onChange,show,handleDropDown,onDelete} = props;	
 			
 	return(
 		<ul>
