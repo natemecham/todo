@@ -1,7 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter, Switch, Route, Link } from 'react-router-dom';
 import './index.css';
 
+
+const Page2 = (props) => {
+	return(
+		<div>
+			<h1>This is page two!!</h1>
+		</div>	
+	);
+}
 
 const TodoListItem = (props) => {
 	const {isComplete,id,onChange,text,handleDropDown,isMenuOpen,onDelete} = props;
@@ -87,7 +96,7 @@ function Toggle(props){
 	);
 }
 
-class App extends React.Component {
+class ToDo extends React.Component {
 	constructor(props){
 		super(props);
 		this.state = {
@@ -158,18 +167,69 @@ class App extends React.Component {
 	
 	render(){
 		return(
+			
+			
 			<div className="todo_wrapper">
+			
 				<Input input={this.state.input} handleChange={this.handleChange} handleSubmit={this.handleSubmit} />
 				<TodoList list={this.state.todo} show={this.state.show} onChange={(i)=>this.handleCheck(i)} handleDropDown={(i)=>this.handleDropDown(i)} onDelete={(i) => this.handleDelete(i)}/>
-				<Toggle	onClick={(i) => this.handleShow(i)} show={this.state.show} onClearClick={this.handleClearClick} todo={this.state.todo}/>
+				<Toggle	onClick={(i) => this.handleShow(i)} show={this.state.show} onClearClick={this.handleClearClick} todo={this.state.todo}/>	
 			</div>
 		);	
 	}
 	
+}//end ToDo
+
+const Nav = (props) => {
+	console.dir(props);
+	return(
+		<nav>
+			<Link className="" to="/">Home</Link>
+			<Link className="" to="/page2">Page2</Link>
+			<Link className="" to="/page3">Page3</Link>
+		</nav>	
+	);
 }
 
 
+const App = (props) => {
+	
+	return(
+		<main>
+			<Nav/>
+		<Switch>
+			<Route exact path='/' component={ToDo} />
+			<Route path='/page2' component={Page2} />
+			<Route exact path='/page3' component={Page3} />
+			<Route path='/page3/:number' component={Page3} />
+		</Switch>
+		</main>
+	);	
+};
 
 
+const Page3 = (props) => {
+	const param = props.match.params.number;
+	//console.dir(props);
+	let onPage = null;
+	if(param){
+		onPage = param;
+	}else{
+		onPage = 'Page 3 Root';
+	}
+	return(
+		<div>
+			<h2>Here is page 3: {onPage}</h2>
+			
+			<ul>
+				<li className={param === '1' ? 'complete' : ''} ><Link  to="/page3/1">Page3:1</Link></li>
+				<li  className={param === '2' ? 'complete' : ''}><Link to="/page3/2">Page3:2</Link></li>
+				<li className={param === '3' ? 'complete' : ''}><Link  to="/page3/3">Page3:3</Link></li>
+				<li className={param === '4' ? 'complete' : ''}><Link  to="/page3/4">Page3:4</Link></li>
+			</ul>
+		</div>	
+	);
+}
 
-ReactDOM.render(<App />, document.getElementById('root'));
+
+ReactDOM.render(<BrowserRouter><App /></BrowserRouter>, document.getElementById('root'));
