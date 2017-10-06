@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+<<<<<<< HEAD
 import { BrowserRouter, Switch, Route, Link } from 'react-router-dom';
 import './index.css';
 
@@ -12,6 +13,11 @@ const Page2 = (props) => {
 	);
 }
 
+=======
+import './index.css';
+
+
+>>>>>>> a48ebe85599f564842280d37ea1757f9b9713b67
 const TodoListItem = (props) => {
 	const {isComplete,id,onChange,text,handleDropDown,isMenuOpen,onDelete} = props;
 	const isCompleteClass = isComplete ? 'complete' : 'incomplete';
@@ -96,7 +102,11 @@ function Toggle(props){
 	);
 }
 
+<<<<<<< HEAD
 class ToDo extends React.Component {
+=======
+class App extends React.Component {
+>>>>>>> a48ebe85599f564842280d37ea1757f9b9713b67
 	constructor(props){
 		super(props);
 		this.state = {
@@ -167,6 +177,7 @@ class ToDo extends React.Component {
 	
 	render(){
 		return(
+<<<<<<< HEAD
 			
 			
 			<div className="todo_wrapper">
@@ -174,10 +185,28 @@ class ToDo extends React.Component {
 				<Input input={this.state.input} handleChange={this.handleChange} handleSubmit={this.handleSubmit} />
 				<TodoList list={this.state.todo} show={this.state.show} onChange={(i)=>this.handleCheck(i)} handleDropDown={(i)=>this.handleDropDown(i)} onDelete={(i) => this.handleDelete(i)}/>
 				<Toggle	onClick={(i) => this.handleShow(i)} show={this.state.show} onClearClick={this.handleClearClick} todo={this.state.todo}/>	
+=======
+			<div className="todo_wrapper">
+				<Input input={this.state.input} handleChange={this.handleChange} handleSubmit={this.handleSubmit} />
+				<TodoList list={this.state.todo} show={this.state.show} onChange={(i)=>this.handleCheck(i)} handleDropDown={(i)=>this.handleDropDown(i)} onDelete={(i) => this.handleDelete(i)}/>
+				<Toggle	onClick={(i) => this.handleShow(i)} show={this.state.show} onClearClick={this.handleClearClick} todo={this.state.todo}/>
+>>>>>>> a48ebe85599f564842280d37ea1757f9b9713b67
 			</div>
 		);	
 	}
 	
+<<<<<<< HEAD
+}//end ToDo
+
+const Nav = (props) => {
+	console.dir(props);
+	return(
+		<nav>
+			<Link className="" to="/">Home</Link>
+			<Link className="" to="/page2">Page2</Link>
+			<Link className="" to="/page3">Page3</Link>
+		</nav>	
+	);
 }
 
 
@@ -222,3 +251,12 @@ const Page3 = (props) => {
 
 
 ReactDOM.render(<BrowserRouter><App /></BrowserRouter>, document.getElementById('root'));
+=======
+}
+
+
+
+
+
+ReactDOM.render(<App />, document.getElementById('root'));
+>>>>>>> a48ebe85599f564842280d37ea1757f9b9713b67

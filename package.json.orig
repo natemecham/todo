@@ -1,11 +1,18 @@
 {
+<<<<<<< HEAD
   "name": "nmtodo",
+=======
+  "name": "todo",
+>>>>>>> a48ebe85599f564842280d37ea1757f9b9713b67
   "version": "0.1.0",
   "private": true,
   "dependencies": {
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
+<<<<<<< HEAD
     "react-router-dom": "^4.2.2",
+=======
+>>>>>>> a48ebe85599f564842280d37ea1757f9b9713b67
     "react-scripts": "1.0.14"
   },
   "scripts": {
@@ -14,4 +21,8 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> a48ebe85599f564842280d37ea1757f9b9713b67
