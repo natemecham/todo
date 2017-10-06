@@ -180,7 +180,16 @@ class ToDo extends React.Component {
 	
 }
 
-
+const Nav = (props) => {
+	console.dir(props);
+	return(
+		<nav>
+			<Link className="" to="/">Home</Link>
+			<Link className="" to="/page2">Page2</Link>
+			<Link className="" to="/page3">Page3</Link>
+		</nav>	
+	);
+}
 const App = (props) => {
 	
 	return(
