@@ -4,13 +4,7 @@ import { BrowserRouter, Switch, Route, Link } from 'react-router-dom';
 import './index.css';
 
 
-const Page2 = (props) => {
-	return(
-		<div>
-			<h1>This is page two!!</h1>
-		</div>	
-	);
-}
+
 
 const TodoListItem = (props) => {
 	const {isComplete,id,onChange,text,handleDropDown,isMenuOpen,onDelete} = props;
@@ -167,9 +161,7 @@ class ToDo extends React.Component {
 	
 	render(){
 		return(
-			
-			
-			<div className="todo_wrapper">
+			<div className="todo_wrapper page">
 			
 				<Input input={this.state.input} handleChange={this.handleChange} handleSubmit={this.handleSubmit} />
 				<TodoList list={this.state.todo} show={this.state.show} onChange={(i)=>this.handleCheck(i)} handleDropDown={(i)=>this.handleDropDown(i)} onDelete={(i) => this.handleDelete(i)}/>
@@ -205,6 +197,13 @@ const App = (props) => {
 	);	
 };
 
+const Page2 = (props) => {
+	return(
+		<div className="page">
+			<h1>This is page two!!</h1>
+		</div>	
+	);
+}
 
 const Page3 = (props) => {
 	const param = props.match.params.number;
@@ -216,9 +215,8 @@ const Page3 = (props) => {
 		onPage = 'Page 3 Root';
 	}
 	return(
-		<div>
+		<div className="page">
 			<h2>Here is page 3: {onPage}</h2>
-			
 			<ul>
 				<li className={param === '1' ? 'complete' : ''} ><Link  to="/page3/1">Page3:1</Link></li>
 				<li  className={param === '2' ? 'complete' : ''}><Link to="/page3/2">Page3:2</Link></li>
