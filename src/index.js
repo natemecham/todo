@@ -10,64 +10,97 @@ const api_key = '22';
 const handleErrors = (response) => {
 	if(!response.ok){
 		throw new Error(':(' + response.statusText);
-		console.dir(response);
 	}
+	//console.log(response);
 	return response.json();
 }// end handleErrors
 
-const getTodoList = () =>{
+
+const getTodoList = (comp) => {
 		const url = 'https://altcademy-to-do-list-api.herokuapp.com/tasks?api_key='+api_key;
 		const methods = {method:'GET'};
 		
-		fetch(url, methods).then(handleErrors).then(
-			(response) =>{
-				return(response);
+		
+		 fetch(url, methods)
+		.then(handleErrors)
+		.then(
+			(data) => {
+				const theList = data.tasks;
+				comp.setState({todo:theList});
 			}
 		).catch(
 			(err) => {
 				throw new Error(err.statusText);
 			}
-		)	
-}//end getTodoList
+		);
+	}//end getToDoList
 
-const newTodo = () => {
+
+/****************************
+*  NEW TODO LIST ITEM
+*****************************/
+const newTodo = (new_text) => {
 	const url = 'https://altcademy-to-do-list-api.herokuapp.com/tasks?api_key='+api_key;
 	const options = {
 			method: 'POST',
-			credentials: 'include',
-			mode: 'cors',
 			headers: {
-				'Access-Control-Allow-Origin':'http://localhost:3000',
-			    Accept: 'application/json',
-			    'Content-Type': 'application/json',
-			    credentials: 'include',
-			    mode: 'cors',
-			    'X-CSRF-Token': 'AuthenticityToken',
-			    'X-Requested-With': 'XMLHttpRequest',
-  			},
-			body: {
+			    'Content-Type': 'application/json'
+  				},
+			body: JSON.stringify({
 			  task:{
-				  content:"this is the test"
+				  content: new_text
 			  }
-			}			
+			})			
 		};//end options
 		
 	fetch(url, options)
-	.then(response => { console.dir(response)})
 	.then(handleErrors)
 	.then(
 		(response) =>{
-			return response;
+			//console.dir(response)
 		}
 	).catch(err=>{
 		return err;
 	});
 }
 
-const newThing = newTodo();
+const markComplete = (id, comp) =>{
+	
+	const url = 'https://altcademy-to-do-list-api.herokuapp.com/tasks/'+id+'/mark_complete?api_key='+api_key;
+	const options = {method:'PUT'};
+	
+	fetch(url,options)
+	.then(handleErrors)
+	.then(data =>{
+		//console.log(data);
+		getTodoList(comp);
+	})
+	.catch(
+		err => {
+			throw new Error(err.statusText);
+		}
+	)
+}//markComplete
 
-console.dir(newThing);
-//console.dir(getTodoList());
+
+const markActive = (id,comp) =>{
+	
+	const url = 'https://altcademy-to-do-list-api.herokuapp.com/tasks/'+id+'/mark_active?api_key='+api_key;
+	const options = {method:'PUT'};
+	
+	fetch(url,options)
+	.then(handleErrors)
+	.then(data =>{
+		//console.log(data);
+		getTodoList(comp);
+	})
+	.catch(
+		err => {
+			throw new Error(err.statusText);
+		}
+	)
+}//markActive
+
 
 
 const TodoListItem = (props) => {
@@ -78,7 +111,7 @@ const TodoListItem = (props) => {
 	return(<li className={ isCompleteClass + ' todo_item'}>	
 				
 				<input type="checkbox" checked={isComplete} value={id} id={"list_"+id} onChange={onChange}/>
-				<label for={"list_"+id}>
+				<label htmlFor={"list_"+id}>
 					{text}
 				</label>
 				<div className={isMenuOpenClass + ' drop_down'}>
@@ -102,14 +135,14 @@ const TodoList = (props) => {
 					case 'all':
 						return true;
 					case 'active':
-						return !data.isComplete;
+						return !data.completed;
 					case 'complete':
-						return data.isComplete;
+						return data.completed;
 					default:
 						return false;
 				}
 			}).map((data,index) => {
-				return <TodoListItem key={index} id={index} text={data.text} isComplete={data.isComplete} onChange={ () => onChange(index)} handleDropDown={() => handleDropDown(index) } isMenuOpen={data.isMenuOpen} onDelete={ () => onDelete(index)} />;
+				return <TodoListItem key={index} id={data.id} text={data.content} isComplete={data.completed} onChange={ () => onChange(data.id, data.completed)} handleDropDown={() => handleDropDown(index) } isMenuOpen={data.isMenuOpen} onDelete={ () => onDelete(index)} />;
 				})
 			}
 		</ul>);
@@ -154,6 +187,7 @@ function Toggle(props){
 }
 
 class ToDo extends React.Component {
+	
 	constructor(props){
 		super(props);
 		this.state = {
@@ -165,7 +199,12 @@ class ToDo extends React.Component {
 	
 	
 	
-		
+	
+	
+	componentDidMount() {
+		getTodoList(this);
+	}//end componentDidMount
+	
 	handleChange = (e) => {
 		this.setState({input: e.target.value});
 	}
@@ -180,19 +219,22 @@ class ToDo extends React.Component {
 			const todo_list = this.state.todo.slice();
 			
 			
-			todo_list[todo_list.length] = {
-				text: add_value,
-				isComplete: false,
-				isMenuOpen:false
-			};
-			this.setState({todo:todo_list});
+			newTodo(add_value);
+			getTodoList(this);
+			
+			
 		}
-	}
+	}//end handleSubmit
 	
-	handleCheck = (i) => {
-		const new_todo = this.state.todo.slice();
-		new_todo[i].isComplete = !new_todo[i].isComplete;
-		this.setState({todo:new_todo});
+	handleCheck = (id,complete) => {
+		//console.log(id);
+		//console.log('is this complete', complete);
+		if(!complete){
+			
+			markComplete(id,this);
+		}else{
+			markActive(id,this);
+		}
 	}
 	
 	handleShow = (i) => {
@@ -224,7 +266,7 @@ class ToDo extends React.Component {
 			<div className="todo_wrapper page" >
 			
 				<Input input={this.state.input} handleChange={this.handleChange} handleSubmit={this.handleSubmit} />
-				<TodoList list={this.state.todo} show={this.state.show} onChange={(i)=>this.handleCheck(i)} handleDropDown={(i)=>this.handleDropDown(i)} onDelete={(i) => this.handleDelete(i)}/>
+				<TodoList list={this.state.todo} show={this.state.show} onChange={(i,v)=>this.handleCheck(i,v)} handleDropDown={(i)=>this.handleDropDown(i)} onDelete={(i) => this.handleDelete(i)}/>
 				<Toggle	onClick={(i) => this.handleShow(i)} show={this.state.show} onClearClick={this.handleClearClick} todo={this.state.todo}/>	
 			</div>
 		);	
