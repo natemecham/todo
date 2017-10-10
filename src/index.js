@@ -1,9 +1,59 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter, Switch, Route, Link } from 'react-router-dom';
+import { BrowserRouter, Switch, Route, Link, Redirect, withRouter } from 'react-router-dom';
 import './index.css';
 
+//Global Constants
+const api_key = 22;
 
+//Functions
+const handleErrors = (response) => {
+	if(!response.ok){
+		throw new Error(':(' + response.statusText);
+	}
+	return response.json();
+}// end handleErrors
+
+const getTodoList = () =>{
+		const url = 'https://altcademy-to-do-list-api.herokuapp.com/tasks?api_key='+api_key;
+		const methods = {method:'GET'};
+		
+		fetch(url, methods).then(handleErrors).then(
+			(response) =>{
+				return(response);
+			}
+		).catch(
+			(err) => {
+				throw new Error(err.statusText);
+			}
+		)	
+}//end getTodoList
+
+const newTodo = () => {
+	const url = 'https://altcademy-to-do-list-api.herokuapp.com/tasks?api_key='+api_key;
+	const options = {
+			method:'POST',
+			headers:{'content-type' : 'application/json'},
+			body:{task:{content:'this is the first test'}},
+			type:'no-cors'
+			};
+	fetch(url, options)
+	.then(handleErrors)
+	.then(
+		(response) =>{
+			return response;
+		}
+	).catch(
+		(err) => {
+			throw new Error(err);
+		}
+	);
+}
+
+const newThing = newTodo();
+
+//console.dir(newThing);
+//console.dir(getTodoList());
 
 
 const TodoListItem = (props) => {
@@ -29,8 +79,7 @@ const TodoListItem = (props) => {
 }//end TodoListItem
 
 const TodoList = (props) => {
-	const {list,onChange,show,handleDropDown,onDelete} = props;	
-			
+	const {list,onChange,show,handleDropDown,onDelete} = props;	 		
 	return(
 		<ul>
 			{
@@ -97,15 +146,12 @@ class ToDo extends React.Component {
 			input: '',
 			todo: new Array(0),
 			show:'all',	
-		}
-		
-		//this.handleChange = this.handleChange.bind(this);
-		//this.handleSubmit = this.handleSubmit.bind(this);
-		//this.handleCheck = this.handleCheck.bind(this);
-		//this.handleClearClick = this.handleClearClick.bind(this);
-		
+		}		
 	}
 	
+	
+	
+		
 	handleChange = (e) => {
 		this.setState({input: e.target.value});
 	}
@@ -161,7 +207,7 @@ class ToDo extends React.Component {
 	
 	render(){
 		return(
-			<div className="todo_wrapper page">
+			<div className="todo_wrapper page" >
 			
 				<Input input={this.state.input} handleChange={this.handleChange} handleSubmit={this.handleSubmit} />
 				<TodoList list={this.state.todo} show={this.state.show} onChange={(i)=>this.handleCheck(i)} handleDropDown={(i)=>this.handleDropDown(i)} onDelete={(i) => this.handleDelete(i)}/>
@@ -173,29 +219,48 @@ class ToDo extends React.Component {
 }
 
 const Nav = (props) => {
-	console.dir(props);
+	const {isLoggedIn,onClick} = props;
 	return(
 		<nav>
+			<button onClick={onClick} className="login">{isLoggedIn ? 'Log Out' : 'Log In'}</button>
 			<Link className="" to="/">Home</Link>
 			<Link className="" to="/page2">Page2</Link>
 			<Link className="" to="/page3">Page3</Link>
 		</nav>	
 	);
 }
-const App = (props) => {
+
+class App extends React.Component {
+	constructor(props){
+		super(props);
+		
+		this.state = {
+			isLoggedIn: false,
+		}
+	}
 	
+	
+	toggleLogIn = () => {
+		this.setState({
+			isLoggedIn: !this.state.isLoggedIn
+		});
+	}
+	
+	
+	render(){
 	return(
 		<main>
-			<Nav/>
-		<Switch>
-			<Route exact path='/' component={ToDo} />
-			<Route path='/page2' component={Page2} />
-			<Route exact path='/page3' component={Page3} />
-			<Route path='/page3/:number' component={Page3} />
-		</Switch>
+			<Nav isLoggedIn={this.state.isLoggedIn} onClick={this.toggleLogIn}/>
+			<Switch>
+				<Route exact path='/' component={ToDo} />
+				<Route path='/page2' component={Page2} />
+				<Route exact path='/page3' component={Page3} />
+				<Route path='/page3/:number' component={Page3} />
+			</Switch>
 		</main>
-	);	
-};
+	);
+	}	
+}//End App
 
 const Page2 = (props) => {
 	return(
@@ -226,6 +291,37 @@ const Page3 = (props) => {
 		</div>	
 	);
 }
+
+
+
+/*const getAPIKey = () =>{
+  const url = 'https://altcademy-to-do-list-api.herokuapp.com/users';
+  const header = {method: 'post'};
+  
+  const api_key = fetch(url,header)
+  .then(response => {
+    if (!response.ok) {
+      throw Error(response.statusText);
+    }
+    return response.json();
+  })
+  .then((response) => {
+      console.log(response);
+      return response.id
+  })
+  .catch(
+      (err) => {
+          console.log(err);
+  });
+}
+
+getAPIKey()*/
+
+
+
+
+
+
 
 
 ReactDOM.render(<BrowserRouter><App /></BrowserRouter>, document.getElementById('root'));
