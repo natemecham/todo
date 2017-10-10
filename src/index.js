@@ -4,12 +4,13 @@ import { BrowserRouter, Switch, Route, Link, Redirect, withRouter } from 'react-
 import './index.css';
 
 //Global Constants
-const api_key = 22;
+const api_key = '22';
 
 //Functions
 const handleErrors = (response) => {
 	if(!response.ok){
 		throw new Error(':(' + response.statusText);
+		console.dir(response);
 	}
 	return response.json();
 }// end handleErrors
@@ -32,27 +33,40 @@ const getTodoList = () =>{
 const newTodo = () => {
 	const url = 'https://altcademy-to-do-list-api.herokuapp.com/tasks?api_key='+api_key;
 	const options = {
-			method:'POST',
-			headers:{'content-type' : 'application/json'},
-			body:{task:{content:'this is the first test'}},
-			type:'no-cors'
-			};
+			method: 'POST',
+			credentials: 'include',
+			mode: 'cors',
+			headers: {
+				'Access-Control-Allow-Origin':'http://localhost:3000',
+			    Accept: 'application/json',
+			    'Content-Type': 'application/json',
+			    credentials: 'include',
+			    mode: 'cors',
+			    'X-CSRF-Token': 'AuthenticityToken',
+			    'X-Requested-With': 'XMLHttpRequest',
+  			},
+			body: {
+			  task:{
+				  content:"this is the test"
+			  }
+			}			
+		};//end options
+		
 	fetch(url, options)
+	.then(response => { console.dir(response)})
 	.then(handleErrors)
 	.then(
 		(response) =>{
 			return response;
 		}
-	).catch(
-		(err) => {
-			throw new Error(err);
-		}
-	);
+	).catch(err=>{
+		return err;
+	});
 }
 
 const newThing = newTodo();
 
-//console.dir(newThing);
+console.dir(newThing);
 //console.dir(getTodoList());
 
 
