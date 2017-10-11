@@ -16,24 +16,6 @@ const handleErrors = (response) => {
 }// end handleErrors
 
 
-const getTodoList = (comp) => {
-		const url = 'https://altcademy-to-do-list-api.herokuapp.com/tasks?api_key='+api_key;
-		const methods = {method:'GET'};
-		
-		
-		 fetch(url, methods)
-		.then(handleErrors)
-		.then(
-			(data) => {
-				const theList = data.tasks;
-				comp.setState({todo:theList});
-			}
-		).catch(
-			(err) => {
-				throw new Error(err.statusText);
-			}
-		);
-	}//end getToDoList
 
 
 /****************************
@@ -63,44 +45,6 @@ const newTodo = (new_text) => {
 		return err;
 	});
 }
-
-const markComplete = (id, comp) =>{
-	
-	const url = 'https://altcademy-to-do-list-api.herokuapp.com/tasks/'+id+'/mark_complete?api_key='+api_key;
-	const options = {method:'PUT'};
-	
-	fetch(url,options)
-	.then(handleErrors)
-	.then(data =>{
-		//console.log(data);
-		getTodoList(comp);
-	})
-	.catch(
-		err => {
-			throw new Error(err.statusText);
-		}
-	)
-}//markComplete
-
-
-const markActive = (id,comp) =>{
-	
-	const url = 'https://altcademy-to-do-list-api.herokuapp.com/tasks/'+id+'/mark_active?api_key='+api_key;
-	const options = {method:'PUT'};
-	
-	fetch(url,options)
-	.then(handleErrors)
-	.then(data =>{
-		//console.log(data);
-		getTodoList(comp);
-	})
-	.catch(
-		err => {
-			throw new Error(err.statusText);
-		}
-	)
-}//markActive
-
 
 
 const TodoListItem = (props) => {
@@ -203,12 +147,63 @@ class ToDo extends React.Component {
 		}		
 	}
 	
+	getTodoList = () => {
+		const url = 'https://altcademy-to-do-list-api.herokuapp.com/tasks?api_key='+api_key;
+		const methods = {method:'GET'};
+		
+		
+		 fetch(url, methods)
+		.then(handleErrors)
+		.then(
+			(data) => {
+				const theList = data.tasks;
+				this.setState({todo:theList});
+			}
+		).catch(
+			(err) => {
+				throw new Error(err.statusText);
+			}
+		);
+	}//end getToDoList
+
+	markComplete = (id) =>{
 	
-	
+		const url = 'https://altcademy-to-do-list-api.herokuapp.com/tasks/'+id+'/mark_complete?api_key='+api_key;
+		const options = {method:'PUT'};
+		
+		fetch(url,options)
+		.then(handleErrors)
+		.then(data =>{
+			this.getTodoList();
+		})
+		.catch(
+			err => {
+				throw new Error(err.statusText);
+			}
+		)
+	}//markComplete
+
+
+	markActive = (id) =>{
+		
+		const url = 'https://altcademy-to-do-list-api.herokuapp.com/tasks/'+id+'/mark_active?api_key='+api_key;
+		const options = {method:'PUT'};
+		
+		fetch(url,options)
+		.then(handleErrors)
+		.then(data =>{
+			this.getTodoList();
+		})
+		.catch(
+			err => {
+				throw new Error(err.statusText);
+			}
+		)
+	}//markActive
 	
 	
 	componentDidMount() {
-		getTodoList(this);
+		this.getTodoList();
 	}//end componentDidMount
 	
 	handleChange = (e) => {
@@ -226,21 +221,21 @@ class ToDo extends React.Component {
 			
 			
 			newTodo(add_value);
-			getTodoList(this);
+			this.getTodoList();
 			
 			
 		}
 	}//end handleSubmit
 	
 	handleCheck = (id,complete) => {
-		//console.log(id);
+		console.log(id);
 		//console.log('is this complete', complete);
 		if(!complete){
-			
-			markComplete(id,this);
+			this.markComplete(id);
 		}else{
-			markActive(id,this);
+			this.markActive(id);
 		}
+		
 	}
 	
 	handleShow = (i) => {
