@@ -130,7 +130,13 @@ const TodoList = (props) => {
 	return(
 		<ul>
 			{
-				list.filter((data) => {
+				list.sort(
+					(a,b) => {
+						const aDate = new Date(a.created_at);
+						const bDate = new Date(b.created_at);
+						return aDate - bDate;
+					}
+				).filter((data) => {
 				switch (show){
 					case 'all':
 						return true;
@@ -165,11 +171,11 @@ function Toggle(props){
 	const {todo, onClick, onClearClick} = props;
 	
 	const activeTodoCount = todo.reduce( (sum,todo ) => {
-		return sum + (!todo.isComplete ? 1 : 0);
+		return sum + (!todo.completed ? 1 : 0);
 	},0);
 	
 	const completeTodoCount = todo.reduce( (sum,todo ) => {
-		return sum + (todo.isComplete ? 1 : 0);
+		return sum + (todo.completed ? 1 : 0);
 	},0);
 	
 	const allTodoCount = todo.length;
@@ -181,7 +187,7 @@ function Toggle(props){
 			<button className={props.show === 'active' ? ' on ' : ''} onClick={() => onClick('active')}>Active <span>{activeTodoCount}</span></button>
 			<button className={props.show === 'complete' ? ' on ' : ''} onClick={() => onClick('complete')}>Complete <span>{completeTodoCount}</span></button>
 			<button className="clear" onClick={onClearClick}>Clear Complete</button>
-			
+			<sub>v2</sub>
 		</div>	
 	);
 }
