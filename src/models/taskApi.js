@@ -16,7 +16,7 @@ const getAPIKey = () => {
 
 const api_key = '22';
 
-export const getTodoList = (component) => {
+export const getTodoList = (component, cb) => {
     const url = `https://altcademy-to-do-list-api.herokuapp.com/tasks?api_key=${api_key}`;
     const methods = {
       method: 'GET'
@@ -26,12 +26,27 @@ export const getTodoList = (component) => {
     .then(
       (data) => {
         const theList = data.tasks;
-        component.setState({todo: theList});
+        component.setState({todo: theList, loading:false});
+        return Promise.resolve();
       }).catch(
       (err) => {
         throw new Error(err.statusText);
       });
 } //end getToDoList
+
+export const getSingleTask = (id,component) => {
+   console.log('eek');
+  getTodoList(component)
+  .then( data => {
+    const wholeList = component.state.todo.slice();
+    const singleTask = wholeList.filter(task => {
+        return task.id == id;
+    });
+    
+    console.dir(singleTask); 
+  });
+
+}//getSingleTask
 
 export const createTask = (new_text, component) => {
   const url = `https://altcademy-to-do-list-api.herokuapp.com/tasks?api_key=${api_key}`;

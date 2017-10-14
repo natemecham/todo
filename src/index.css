@@ -22,6 +22,10 @@
 	animation: slide-in .5s ease-out;
 }
 
+.loading{
+  background-color: red !important;
+}
+
 
 @keyframes slide-in{
 	0%{
@@ -63,6 +67,10 @@ button,input{
 	width: 80%;
 	margin: 10% auto;
 	padding-bottom: 16px;
+}
+
+.single-page{ 
+  padding-top: 16px;
 }
 
 .form_wrapper{
@@ -116,12 +124,13 @@ input[type="checkbox"]{
 
 [type="checkbox"] + label{
 	display: block;
-	//background-color: black;
 	position: relative;
 	min-height: 28px;
 	line-height: 28px;
 	padding-left: 50px;
+	z-index: 9;
 }
+
 
 [type="checkbox"] + label:before{
 	content: '';
@@ -151,7 +160,7 @@ input[type="checkbox"]{
 	left: 15px;
 	border-left: 0px solid #2bce51;
 	border-bottom:0px solid #2bce51;
-	transition: all .25s linear;
+	transition: all .25s cubic-bezier(.09,-.75,.95,1);
 }
 
 
@@ -166,14 +175,40 @@ input[type="checkbox"]{
 	transition: all .35s cubic-bezier(.09,1.47,.95,1.15);
 }
 
+/*Single Checkboxes */
+.single-page [type="checkbox"] + label{
+  min-height: 40px;
+	line-height: 40px;
+	padding-left: 60px;
+	font-size: 20px; 
+}
+
+.single-page [type="checkbox"] + label:before{
+  width: 40px;
+	height: 40px;
+}
+
+.single-page [type="checkbox"]:not(:checked) + label:after{
+  top: 20px;
+	left: 17px;
+}
+
+.single-page [type="checkbox"]:checked + label:after{
+  border-left: 5px solid #2bce51;
+	border-bottom:5px solid #2bce51;
+  top: 1px;
+	left: 9px;
+	width: 35px;
+	height: 10px;
+}
 
 .drop_down{
 	background-color: #blue;
 	position: absolute;background-color: #fff;
-	z-index: 10;
+	z-index: 1;
 	top:10px;
 	right:0;
-	padding: 0 0px 16px 16px;
+	padding: 0 0px 5px 5px;
 }
 
 .drop_down .toggle_drop{
@@ -193,7 +228,6 @@ input[type="checkbox"]{
 }
 
 
-
 .drop_down .menu{
 	z-index: 1;
 	opacity: 0;
@@ -204,10 +238,14 @@ input[type="checkbox"]{
 	transition: all .25s ease-out;
 }
 
+.drop_down.open{
+  	z-index: 10;
+}
+
 .drop_down.open .menu{
 	opacity: 1;
 	right: -5px;
-	z-index: 1;	
+	z-index: 10;	
 	transform: scaleY(1);
 	transform-origin: top;
 	border:1px solid #d8d5d5;
@@ -218,17 +256,25 @@ input[type="checkbox"]{
 .drop_down .btn{
 	border: 0;
 	background-color: transparent;
-	color: #d8d5d5;
+	color: #b3b3b3;
 	position: relative;
 	padding: 5px 30px 5px 10px;
 	text-align: left;
 	font-size: 14px;
 	margin:0;
+	width: 100%;
 	text-decoration: none;
 	border-bottom:1px solid #d8d5d5;
+	display: block;
+	transition: background-color .25s linear; 
 }
 
-.drop_down .btn:last-of-type{
+.drop_down .btn:hover{
+  background-color: blue;
+  color: #fff;
+}
+
+.drop_down .btn:nth-last-child(1){
 	border-bottom: none;
 }
 
@@ -284,7 +330,7 @@ input[type="checkbox"]{
 	height: 29px;
 }
 
-li.complete{
+.complete{
   text-decoration:line-through;
   color:#c8c7c7;
 }
@@ -294,4 +340,91 @@ button{
   margin:5px;
 }
 
+/*
+  Single Page  
+*/
 
+.single-page{
+  position: relative;
+}
+
+.single-wrapper{
+  margin:0px 16px 0 16px;
+  background-color: #fff;
+  box-shadow: 0px 2px 2px rgba(0,0,0,.3);
+  padding-top: 16px; 
+  position: relative;
+}
+
+.single{
+  margin:0 16px 16px;
+}
+
+.single-footer{
+  background-color: #dbdfe1;
+	margin:0;
+	padding:8px;
+}
+
+.meta{
+  display: inline-block;
+  width: inherit;
+  margin: 0;
+  background-color: transparent;
+	border:1px solid #868687;
+	color: #868687;
+	position: relative;
+	padding: 0px 5px 0px 0px;
+	text-align: left;
+	font-size: 10px;
+	margin-top: 0;
+	margin-bottom: 0;
+	margin-right: 5px;
+	height: 28px;
+	line-height: 26px;
+	letter-spacing: 1px;
+  vertical-align: middle;
+
+}
+
+.meta:before{
+  content:'id';
+  background-color:  #f4f4f4;
+	border-right:1px solid #868687;
+	color: #868687;
+	padding: 1px 7px 0px;
+	margin-right: 5px;
+	font-size: 8px;
+	height: 25px;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+  vertical-align: top;
+	display: inline-block;
+}
+
+.meta.id:before{
+  content: 'ID';
+}
+.meta.created:before{
+  content:'Created';
+}
+
+.backLink{
+  display: block;
+  position: absolute;
+  top:38px;
+  left:-35px;
+  height: 30px;
+  width: 30px;
+  border-left:3px solid #fff;
+  border-bottom:3px solid #fff; 
+  text-indent:-9999px;
+  transform: rotate(45deg) ;
+  transition: transform .25s cubic-bezier(.09,1.47,.95,1.5);
+  background-color: transparent;
+}
+
+.backLink:hover{
+  transform: translateX(-5px) rotate(45deg);
+  box-shadow: -3px 3px 4px rgba(0,0,0,.3);  
+}

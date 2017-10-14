@@ -1,11 +1,70 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter, Switch, Route, Link, Redirect, withRouter } from 'react-router-dom';
+//import TaskSingle from './task-single';
+import { BrowserRouter, Switch, Route, Link, Redirect, withRouter,match } from 'react-router-dom';
 import {corsRequest, handleErrors} from './utilities/fetchHelpers.js';
-import {createTask,getTodoList,markComplete,markActive,deleteTask} from './models/taskApi.js';
+import {createTask,getTodoList,markComplete,markActive,deleteTask,getSingleTask} from './models/taskApi.js';
+import {handleCheck} from './models/taskActions.js';
 import './index.css'; 
 
-const api_key = '22';
+const TaskSingle = (props) =>{
+  const {state,onChange,parent} = props;
+  const {todo,singleID} = state;
+  const singleTask = todo.find(task => {
+    return task.id == singleID;
+  });
+  const createdDateObj = new Date(singleTask.created_at);
+  const monthNames = ["January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+  ];
+  const createdDate = createdDateObj.getHours()%12 +':'+ createdDateObj.getMinutes() + (createdDateObj.getHours() > 12 ? 'PM' : 'PM') +' '+ monthNames[createdDateObj.getMonth()] + ' ' + createdDateObj.getFullYear();
+  const isCompleteClass = singleTask.completed ? 'complete' : 'incomplete';
+ 
+ return(
+   <div className="single-wrapper">
+    <div className={'single ' + isCompleteClass}>
+      <input type="checkbox" checked={singleTask.completed} value={singleTask.id} id={"list_"+singleTask.id} onChange={ () => onChange(singleTask.id, singleTask.completed,parent)}  />
+        <label htmlFor={"list_"+singleTask.id}>
+          {singleTask.content}
+        </label>
+    </div>
+    <div className="single-footer">
+        <p className="meta id">{singleTask.id}</p>
+        <p className="meta created">{createdDate}</p>
+      </div>
+  </div>
+ );
+  
+}//TaskSingle
+
+class SingleTaskPage extends React.Component{
+  constructor(props){
+    super(props);
+    this.state= {
+      singleID: props.match.params.id,
+      todo: new Array(0),
+      loading:true 
+    }
+  }
+  
+  componentWillMount(){
+    getTodoList(this);
+  }
+  
+  render(){
+    
+    if(this.state.loading){
+      return false;
+    }else{    
+      return(
+        <div className={"todo_wrapper page single-page"}>
+          <Link className="backLink" to="/">Back</Link>
+          <TaskSingle state={this.state} onChange={(i,v)=>handleCheck(i,v,this)}  parent={this} />
+        </div>
+      );
+    }//else
+  }//render
+}//SingleTaskPage
 
 const TodoListItem = (props) => {
   const {isComplete,id,onChange,text,handleDropDown,isMenuOpen,onDelete} = props;
@@ -21,6 +80,7 @@ const TodoListItem = (props) => {
       <div className={isMenuOpenClass + ' drop_down'}>
         <button className="toggle_drop"  onClick={handleDropDown}></button>
         <div className="menu">
+          <Link className="btn" to={`/task-single/${id}`}>See Details</Link>
           <button onClick={onDelete} className="delete btn">Delete</button>
         </div>
       </div>
@@ -29,7 +89,7 @@ const TodoListItem = (props) => {
 }//end TodoListItem
 
 const TodoList = (props) => {
-  const {list,onChange,show,handleDropDown,onDelete} = props;       
+  const {list,onChange,show,handleDropDown,onDelete,parent} = props;       
   return(
     <ul>
       {
@@ -51,7 +111,7 @@ const TodoList = (props) => {
             return false;
         }
       }).map((data,index) => {
-        return <TodoListItem key={index} id={data.id} text={data.content} isComplete={data.completed} onChange={ () => onChange(data.id, data.completed)} handleDropDown={() => handleDropDown(index) } isMenuOpen={data.isMenuOpen} onDelete={ () => onDelete(data.id)} />;
+        return <TodoListItem key={index} id={data.id} text={data.content} isComplete={data.completed} onChange={ () => onChange(data.id, data.completed,parent)} handleDropDown={() => handleDropDown(index) } isMenuOpen={data.isMenuOpen} onDelete={ () => onDelete(data.id)} />;
         })
       }
     </ul>);
@@ -100,7 +160,8 @@ class ToDo extends React.Component {
     this.state = {
       input: '',
       todo: new Array(0),
-      show:'all',  
+      show:'all',
+      loading:true  
     }    
   }  
   
@@ -124,13 +185,16 @@ class ToDo extends React.Component {
     }
   }//end handleSubmit
   
-  handleCheck = (id,complete) => {
+  /*
+    I moved this to models taskActions so I could use it in two different classes (ToDo and SingleTaskPage)
+    handleCheck = (id,complete) => {
     if(!complete){
       markComplete(id, this);
     }else{
       markActive(id,this);
     }
   }
+  */
   
   handleShow = (i) => {
     this.setState({show:i});
@@ -159,11 +223,12 @@ class ToDo extends React.Component {
   }
   
   render(){
+    const loading = this.state.loading ? 'loading' : '';
     return(
-      <div className="todo_wrapper page" >
+      <div className={"todo_wrapper page " + loading } >
       
         <Input input={this.state.input} handleChange={this.handleChange} handleSubmit={this.handleSubmit} />
-        <TodoList list={this.state.todo} show={this.state.show} onChange={(i,v)=>this.handleCheck(i,v)} handleDropDown={(i)=>this.handleDropDown(i)} onDelete={(i) => this.handleDelete(i)}/>
+        <TodoList list={this.state.todo} show={this.state.show} onChange={(i,v)=>handleCheck(i,v,this)} parent={this} handleDropDown={(i)=>this.handleDropDown(i)} onDelete={(i) => this.handleDelete(i)}/>
         <Toggle  onClick={(i) => this.handleShow(i)} show={this.state.show} onClearClick={this.handleClearClick} todo={this.state.todo}/>  
       </div>
     );  
@@ -177,8 +242,6 @@ const Nav = (props) => {
     <nav>
       <button onClick={onClick} className="login">{isLoggedIn ? 'Log Out' : 'Log In'}</button>
       <Link className="" to="/">Home</Link>
-      <Link className="" to="/page2">Page2</Link>
-      <Link className="" to="/page3">Page3</Link>
     </nav>  
   );
 }
@@ -205,44 +268,13 @@ class App extends React.Component {
       <Nav isLoggedIn={this.state.isLoggedIn} onClick={this.toggleLogIn}/>
       <Switch>
         <Route exact path='/' component={ToDo} />
-        <Route path='/page2' component={Page2} />
-        <Route exact path='/page3' component={Page3} />
-        <Route path='/page3/:number' component={Page3} />
+        <Route path='/task-single/:id' component={SingleTaskPage} />
       </Switch>
     </main>
   );
   }
 }//End App
 
-const Page2 = (props) => {
-  return(
-    <div className="page">
-      <h1>This is page two!!</h1>
-    </div>
-  );
-}
-
-const Page3 = (props) => {
-  const param = props.match.params.number;
-  //console.dir(props);
-  let onPage = null;
-  if(param){
-    onPage = param;
-  }else{
-    onPage = 'Page 3 Root';
-  }
-  return(
-    <div className="page">
-      <h2>Here is page 3: {onPage}</h2>
-      <ul>
-        <li className={param === '1' ? 'complete' : ''} ><Link  to="/page3/1">Page3:1</Link></li>
-        <li  className={param === '2' ? 'complete' : ''}><Link to="/page3/2">Page3:2</Link></li>
-        <li className={param === '3' ? 'complete' : ''}><Link  to="/page3/3">Page3:3</Link></li>
-        <li className={param === '4' ? 'complete' : ''}><Link  to="/page3/4">Page3:4</Link></li>
-      </ul>
-    </div>
-  );
-}
 
 
 ReactDOM.render(<BrowserRouter><App /></BrowserRouter>, document.getElementById('root'));
