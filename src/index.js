@@ -1,384 +1,123 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter, Switch, Route, Link, Redirect, withRouter } from 'react-router-dom';
+//import TaskSingle from './task-single';
+import { BrowserRouter, Switch, Route, Link, Redirect, withRouter, match } from 'react-router-dom';
+import { createTask, getTodoList, markComplete, markActive, deleteTask, getSingleTask } from './models/taskApi.js';
+
+import Nav from './components/Nav';
+import ToDo from './pages/ToDo';
+
 import './index.css';
 
-//Global Constants
-const api_key = '22';
+const Task = (props) =>{
+  const { state, onChange } = props;
+  const { todo, singleID } = state;
+  const singleTask = todo.find(task => {
+    return task.id == singleID;
+  });
+  const createdDateObj = new Date(singleTask.created_at);
+  const monthNames = ["January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+  ];
+  const createdDate = createdDateObj.getHours()%12 +':'+ createdDateObj.getMinutes() + (createdDateObj.getHours() > 12 ? 'PM' : 'PM') +' '+ monthNames[createdDateObj.getMonth()] + ' ' + createdDateObj.getFullYear();
+  const isCompleteClass = singleTask.completed ? 'complete' : 'incomplete';
 
-//Functions
-const handleErrors = (response) => {
-	if(!response.ok){
-		throw new Error(':(' + response.statusText);
-	}
-	//console.log(response);
-	return response.json();
-}// end handleErrors
-
-
-
-
-/****************************
-*  NEW TODO LIST ITEM
-*****************************/
-const newTodo = (new_text) => {
-	const url = 'https://altcademy-to-do-list-api.herokuapp.com/tasks?api_key='+api_key;
-	const options = {
-			method: 'POST',
-			headers: {
-			    'Content-Type': 'application/json'
-  				},
-			body: JSON.stringify({
-			  task:{
-				  content: new_text
-			  }
-			})			
-		};//end options
-		
-	fetch(url, options)
-	.then(handleErrors)
-	.then(
-		(response) =>{
-			//console.dir(response)
-		}
-	).catch(err=>{
-		return err;
-	});
+  return(
+    <div className="single-wrapper">
+      <div className={'single ' + isCompleteClass}>
+        <input type="checkbox" checked={singleTask.completed} value={singleTask.id} id={"list_"+singleTask.id} onChange={ () => onChange(singleTask.id, singleTask.completed)}  />
+        <label htmlFor={"list_"+singleTask.id}>
+          {singleTask.content}
+        </label>
+      </div>
+      <div className="single-footer">
+        <p className="meta id">{singleTask.id}</p>
+        <p className="meta created">{createdDate}</p>
+      </div>
+    </div>
+  );
 }
 
+class TaskPage extends React.Component{
+  constructor(props) {
+    super(props);
+    this.state= {
+      singleID: props.match.params.id,
+      todo: [],
+      loading: true,
+    }
+  }
 
-const TodoListItem = (props) => {
-	const {isComplete,id,onChange,text,handleDropDown,isMenuOpen,onDelete} = props;
-	const isCompleteClass = isComplete ? 'complete' : 'incomplete';
-	const isMenuOpenClass = isMenuOpen ? 'open' : 'closed';
-	
-	return(<li className={ isCompleteClass + ' todo_item'}>	
-				
-				<input type="checkbox" checked={isComplete} value={id} id={"list_"+id} onChange={onChange}/>
-				<label htmlFor={"list_"+id}>
-					{text}
-				</label>
-				<div className={isMenuOpenClass + ' drop_down'}>
-					<button className="toggle_drop"  onClick={handleDropDown}></button>
-					<div className="menu">
-						<button onClick={onDelete} className="delete btn">Delete</button>
-					</div>
-				</div>
-			</li>
-		);
-			
-}//end TodoListItem
+  componentWillMount() {
+    getTodoList()
+    .then((data) => {
+      this.setState({todo: data.tasks, loading:false});
+    })
+    .catch((error) => { console.error(error) });
+  }
 
-const TodoList = (props) => {
-	const {list,onChange,show,handleDropDown,onDelete} = props;	 		
-	return(
-		<ul>
-			{
-				list.sort(
-					(a,b) => {
-						const aDate = new Date(a.created_at);
-						const bDate = new Date(b.created_at);
-						return aDate - bDate;
-					}
-				).filter((data) => {
-				switch (show){
-					case 'all':
-						return true;
-					case 'active':
-						return !data.completed;
-					case 'complete':
-						return data.completed;
-					default:
-						return false;
-				}
-			}).map((data,index) => {
-				return <TodoListItem key={index} id={data.id} text={data.content} isComplete={data.completed} onChange={ () => onChange(data.id, data.completed)} handleDropDown={() => handleDropDown(index) } isMenuOpen={data.isMenuOpen} onDelete={ () => onDelete(index)} />;
-				})
-			}
-		</ul>);
-}//end TodoList
+  handleCheck = (id, complete) => {
+    const updateTask = (data) => {
+      const { task } = data;
+      this.setState({
+        todo: this.state.todo.map((t) => {
+          if (t.id === task.id) {
+            return task;
+          }
+          return t;
+        })
+      })
+    };
 
+    if (!complete) {
+      markComplete(id)
+      .then(updateTask);
+    } else {
+      markActive(id)
+      .then(updateTask);
+    }
+  }
 
-const Input = (props) => {
-	const {handleSubmit,input,handleChange} = props;
-	return(
-		<div className="form_wrapper" onSubmit={handleSubmit}>
-			<form name="new_todo">
-				<input placeholder="What do you need to do?" type="text" value={input} onChange={handleChange} />
-				<input type="submit" value="Add" />
-			</form>
-		</div>
-	);
-}
-
-function Toggle(props){
-	const {todo, onClick, onClearClick} = props;
-	
-	const activeTodoCount = todo.reduce( (sum,todo ) => {
-		return sum + (!todo.completed ? 1 : 0);
-	},0);
-	
-	const completeTodoCount = todo.reduce( (sum,todo ) => {
-		return sum + (todo.completed ? 1 : 0);
-	},0);
-	
-	const allTodoCount = todo.length;
-	
-	
-	return(
-		<div className="toggle">
-			<button className={props.show === 'all' ? ' on ' : ''} onClick={() => onClick('all')}>All <span>{allTodoCount}</span></button>
-			<button className={props.show === 'active' ? ' on ' : ''} onClick={() => onClick('active')}>Active <span>{activeTodoCount}</span></button>
-			<button className={props.show === 'complete' ? ' on ' : ''} onClick={() => onClick('complete')}>Complete <span>{completeTodoCount}</span></button>
-			<button className="clear" onClick={onClearClick}>Clear Complete</button>
-			<sub>v2</sub>
-		</div>	
-	);
-}
-
-class ToDo extends React.Component {
-	
-	constructor(props){
-		super(props);
-		this.state = {
-			input: '',
-			todo: new Array(0),
-			show:'all',	
-		}		
-	}
-	
-	getTodoList = () => {
-		const url = 'https://altcademy-to-do-list-api.herokuapp.com/tasks?api_key='+api_key;
-		const methods = {method:'GET'};
-		
-		
-		 fetch(url, methods)
-		.then(handleErrors)
-		.then(
-			(data) => {
-				const theList = data.tasks;
-				this.setState({todo:theList});
-			}
-		).catch(
-			(err) => {
-				throw new Error(err.statusText);
-			}
-		);
-	}//end getToDoList
-
-	markComplete = (id) =>{
-	
-		const url = 'https://altcademy-to-do-list-api.herokuapp.com/tasks/'+id+'/mark_complete?api_key='+api_key;
-		const options = {method:'PUT'};
-		
-		fetch(url,options)
-		.then(handleErrors)
-		.then(data =>{
-			this.getTodoList();
-		})
-		.catch(
-			err => {
-				throw new Error(err.statusText);
-			}
-		)
-	}//markComplete
-
-
-	markActive = (id) =>{
-		
-		const url = 'https://altcademy-to-do-list-api.herokuapp.com/tasks/'+id+'/mark_active?api_key='+api_key;
-		const options = {method:'PUT'};
-		
-		fetch(url,options)
-		.then(handleErrors)
-		.then(data =>{
-			this.getTodoList();
-		})
-		.catch(
-			err => {
-				throw new Error(err.statusText);
-			}
-		)
-	}//markActive
-	
-	
-	componentDidMount() {
-		this.getTodoList();
-	}//end componentDidMount
-	
-	handleChange = (e) => {
-		this.setState({input: e.target.value});
-	}
-	
-	handleSubmit = (e) => {
-		e.preventDefault();
-		const input = this.state.input;
-		if(input){
-			const add_value = input;
-			this.setState({input: ''});
-			
-			const todo_list = this.state.todo.slice();
-			
-			
-			newTodo(add_value);
-			this.getTodoList();
-			
-			
-		}
-	}//end handleSubmit
-	
-	handleCheck = (id,complete) => {
-		console.log(id);
-		//console.log('is this complete', complete);
-		if(!complete){
-			this.markComplete(id);
-		}else{
-			this.markActive(id);
-		}
-		
-	}
-	
-	handleShow = (i) => {
-		this.setState({show:i});
-	}
-	
-	handleClearClick = () => {
-		const new_todo = this.state.todo.slice();
-		const cleared_complete = new_todo.filter(todo => !todo.isComplete);
-		
-		this.setState({todo:cleared_complete});
-	}
-	
-	handleDropDown = (i) => {
-		const new_todo = this.state.todo.slice();
-		new_todo[i].isMenuOpen = !new_todo[i].isMenuOpen;
-		this.setState({todo:new_todo});
-	}
-	
-	handleDelete = (i) => {
-		const new_todo = this.state.todo.slice();
-		new_todo.splice(i,1);
-		this.setState({todo:new_todo});
-
-	}
-	
-	render(){
-		return(
-			<div className="todo_wrapper page" >
-			
-				<Input input={this.state.input} handleChange={this.handleChange} handleSubmit={this.handleSubmit} />
-				<TodoList list={this.state.todo} show={this.state.show} onChange={(i,v)=>this.handleCheck(i,v)} handleDropDown={(i)=>this.handleDropDown(i)} onDelete={(i) => this.handleDelete(i)}/>
-				<Toggle	onClick={(i) => this.handleShow(i)} show={this.state.show} onClearClick={this.handleClearClick} todo={this.state.todo}/>	
-			</div>
-		);	
-	}
-	
-}
-
-const Nav = (props) => {
-	const {isLoggedIn,onClick} = props;
-	return(
-		<nav>
-			<button onClick={onClick} className="login">{isLoggedIn ? 'Log Out' : 'Log In'}</button>
-			<Link className="" to="/">Home</Link>
-			<Link className="" to="/page2">Page2</Link>
-			<Link className="" to="/page3">Page3</Link>
-		</nav>	
-	);
+  render(){
+    if (this.state.loading) {
+      return false;
+    } else {
+      return(
+        <div className={"todo_wrapper page single-page"}>
+          <Link className="backLink" to="/">Back</Link>
+          <Task state={this.state} onChange={this.handleCheck} />
+        </div>
+      );
+    }
+  }
 }
 
 class App extends React.Component {
-	constructor(props){
-		super(props);
-		
-		this.state = {
-			isLoggedIn: false,
-		}
-	}
-	
-	
-	toggleLogIn = () => {
-		this.setState({
-			isLoggedIn: !this.state.isLoggedIn
-		});
-	}
-	
-	
-	render(){
-	return(
-		<main>
-			<Nav isLoggedIn={this.state.isLoggedIn} onClick={this.toggleLogIn}/>
-			<Switch>
-				<Route exact path='/' component={ToDo} />
-				<Route path='/page2' component={Page2} />
-				<Route exact path='/page3' component={Page3} />
-				<Route path='/page3/:number' component={Page3} />
-			</Switch>
-		</main>
-	);
-	}	
-}//End App
+  constructor(props){
+    super(props);
 
-const Page2 = (props) => {
-	return(
-		<div className="page">
-			<h1>This is page two!!</h1>
-		</div>	
-	);
-}
-
-const Page3 = (props) => {
-	const param = props.match.params.number;
-	//console.dir(props);
-	let onPage = null;
-	if(param){
-		onPage = param;
-	}else{
-		onPage = 'Page 3 Root';
-	}
-	return(
-		<div className="page">
-			<h2>Here is page 3: {onPage}</h2>
-			<ul>
-				<li className={param === '1' ? 'complete' : ''} ><Link  to="/page3/1">Page3:1</Link></li>
-				<li  className={param === '2' ? 'complete' : ''}><Link to="/page3/2">Page3:2</Link></li>
-				<li className={param === '3' ? 'complete' : ''}><Link  to="/page3/3">Page3:3</Link></li>
-				<li className={param === '4' ? 'complete' : ''}><Link  to="/page3/4">Page3:4</Link></li>
-			</ul>
-		</div>	
-	);
-}
-
-
-
-/*const getAPIKey = () =>{
-  const url = 'https://altcademy-to-do-list-api.herokuapp.com/users';
-  const header = {method: 'post'};
-  
-  const api_key = fetch(url,header)
-  .then(response => {
-    if (!response.ok) {
-      throw Error(response.statusText);
+    this.state = {
+      isLoggedIn: false,
     }
-    return response.json();
-  })
-  .then((response) => {
-      console.log(response);
-      return response.id
-  })
-  .catch(
-      (err) => {
-          console.log(err);
-  });
+  }
+
+  toggleLogIn = () => {
+    this.setState({
+      isLoggedIn: !this.state.isLoggedIn
+    });
+  }
+
+  render(){
+  return(
+    <main>
+      <Nav isLoggedIn={this.state.isLoggedIn} onClick={this.toggleLogIn}/>
+      <Switch>
+        <Route exact path='/' component={ToDo} />
+        <Route path='/task/:id' component={TaskPage} />
+      </Switch>
+    </main>
+  );
+  }
 }
-
-getAPIKey()*/
-
-
-
-
-
-
-
 
 ReactDOM.render(<BrowserRouter><App /></BrowserRouter>, document.getElementById('root'));
