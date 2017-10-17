@@ -23,7 +23,7 @@
 }
 
 .loading{
-  background-color: red !important;
+  background-color: #3e4348 !important;
 }
 
 
@@ -126,7 +126,7 @@ input[type="checkbox"]{
 	display: block;
 	position: relative;
 	min-height: 28px;
-	line-height: 28px;
+	line-height: 31px;
 	padding-left: 50px;
 	z-index: 9;
 }
@@ -178,7 +178,7 @@ input[type="checkbox"]{
 /*Single Checkboxes */
 .single-page [type="checkbox"] + label{
   min-height: 40px;
-	line-height: 40px;
+	line-height: 45px;
 	padding-left: 60px;
 	font-size: 20px; 
 }
@@ -427,4 +427,14 @@ button{
 .backLink:hover{
   transform: translateX(-5px) rotate(45deg);
   box-shadow: -3px 3px 4px rgba(0,0,0,.3);  
+}
+
+.delete{
+  background-color: transparent;
+	border-radius: 0;
+	border: none;
+	height: 28px;
+	margin: 0;
+	float: right;
+	color: #868687;
 }

@@ -26,17 +26,21 @@ export const getTodoList = (component, cb) => {
   .then(handleErrors);
 }
 
-export const getSingleTask = (id, component) => {
-  getTodoList(component)
-  .then( data => {
-    const wholeList = component.state.todo.slice();
-    const singleTask = wholeList.filter(task => {
-      return task.id === id;
-    });
-
-    console.dir(singleTask);
-  });
+export const getSingleTask = (id) => {
+  const url = `https://altcademy-to-do-list-api.herokuapp.com/tasks?api_key=${api_key}`;
+  const methods = {
+    method: 'GET'
+  };
+   
+  return fetch(url,methods)
+   .then(handleErrors)
+   .then(data => {
+      return data.tasks.find(task => {
+        return id == task.id
+      });
+   })
 }
+
 
 export const createTask = (content) => {
   const url = `https://altcademy-to-do-list-api.herokuapp.com/tasks?api_key=${api_key}`;
@@ -69,11 +73,10 @@ export const markActive = (id) => {
   .then(handleErrors)
 }
 
-export const deleteTask = (id,component) =>{
+export const deleteTask = (id) =>{
   const url = `https://altcademy-to-do-list-api.herokuapp.com/tasks/${id}?api_key=${api_key}`;
   const options = {method: 'DELETE'};
 
   return fetch(url, options)
   .then(handleErrors)
 }
-

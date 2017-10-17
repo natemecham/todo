@@ -4,8 +4,7 @@ import {
   getTodoList,
   markComplete,
   markActive,
-  deleteTask,
-  getSingleTask
+  deleteTask
 } from '../../models/taskApi.js';
 
 import Input from './Input';
