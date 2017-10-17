@@ -17,6 +17,7 @@ class ToDo extends React.Component {
 
     this.state = {
       input: '',
+      input_error:false,
       todo: [],
       show: 'all',
       loading: true,
@@ -32,13 +33,19 @@ class ToDo extends React.Component {
   }
 
   handleChange = (e) => {
+    if(e.target.value.length > 200){
+      this.setState({input_error:true});
+    }else{
+       this.setState({input_error:false});
+    }
     this.setState({input: e.target.value});
   }
 
   handleSubmit = (e) => {
     e.preventDefault();
     const input = this.state.input;
-    if (input) {
+    if (input && input.length < 200) {
+      this.setState({input_error:false});
       createTask(input)
       .then((data) => {
         this.setState({
@@ -46,7 +53,10 @@ class ToDo extends React.Component {
           input: '',
         })
       })
+    } else{
+        this.setState({input_error:true});
     }
+    
   }
 
   // Better to keep this here, this function is small enough that rewriting it isn't a problem
@@ -127,6 +137,7 @@ class ToDo extends React.Component {
           input={this.state.input}
           handleChange={this.handleChange}
           handleSubmit={this.handleSubmit}
+          error={this.state.input_error}
         />
         <ToDoList
           list={this.state.todo}
