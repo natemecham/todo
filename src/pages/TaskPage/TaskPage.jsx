@@ -23,7 +23,6 @@ class TaskPage extends React.Component{
   componentWillMount() {
     getSingleTask(this.state.singleID)
     .then((task) => {
-      console.dir(task);
       this.setState({singleTask: task, loading:false});
     })
     .catch((error) => { console.error(error) });
@@ -32,14 +31,8 @@ class TaskPage extends React.Component{
   handleCheck = (id, complete) => {
     const updateTask = (data) => {
       const { task } = data;
-      this.setState({
-        todo: this.state.todo.map((t) => {
-          if (t.id === task.id) {
-            return task;
-          }
-          return t;
-        })
-      })
+      task['flip'] = task.completed;
+      this.setState({singleTask:task});
     };
 
     if (!complete) {

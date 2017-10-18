@@ -32,6 +32,7 @@ const ToDoList = (props) => {
             handleDropDown={() => handleDropDown(index)}
             isMenuOpen={data.isMenuOpen}
             onDelete={() => onDelete(data.id, index)}
+            flip={data.flip}
           />;
         })
       }

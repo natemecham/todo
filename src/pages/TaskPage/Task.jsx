@@ -9,12 +9,13 @@ const Task = (props) =>{
   ];
   const createdDate = createdDateObj.getHours()%12 +':'+ createdDateObj.getMinutes() + (createdDateObj.getHours() > 12 ? 'PM' : 'PM') +' '+ monthNames[createdDateObj.getMonth()] + ' ' + createdDateObj.getFullYear();
   const isCompleteClass = theTask.completed ? 'complete' : 'incomplete';
-
+  const flipAction = theTask.flip ? 'flip' : '';
+  
   return(
     <div className="single-wrapper">
       <div className={'single ' + isCompleteClass}>
         <input type="checkbox" checked={theTask.completed} value={theTask.id} id={"list_"+theTask.id} onChange={ () => onChange(theTask.id, theTask.completed)}  />
-        <label htmlFor={"list_"+theTask.id}>
+        <label htmlFor={"list_"+theTask.id} className={flipAction}>
           {theTask.content}
         </label>
       </div>
