@@ -31,7 +31,6 @@ class TaskPage extends React.Component{
   handleCheck = (id, complete) => {
     const updateTask = (data) => {
       const { task } = data;
-      task['flip'] = task.completed;
       this.setState({singleTask:task});
     };
 
