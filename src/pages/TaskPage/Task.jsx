@@ -36,7 +36,7 @@ class Task extends React.Component {
         </div>
       </div>
     );
-  }
-}
+  }//render
+}//Task
 
 export default Task;
