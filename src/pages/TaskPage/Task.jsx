@@ -9,7 +9,7 @@ const Task = (props) =>{
   ];
   const createdDate = createdDateObj.getHours()%12 +':'+ createdDateObj.getMinutes() + (createdDateObj.getHours() > 12 ? 'PM' : 'PM') +' '+ monthNames[createdDateObj.getMonth()] + ' ' + createdDateObj.getFullYear();
   const isCompleteClass = theTask.completed ? 'complete' : 'incomplete';
-  const flipAction = theTask.flip ? 'flip' : '';
+  const flipAction = theTask.completed ? 'flip' : '';
   
   return(
     <div className="single-wrapper">

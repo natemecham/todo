@@ -76,16 +76,6 @@ class ToDo extends React.Component {
     if (!complete) {
       markComplete(id)
       .then(updateTask)
-      .then( data =>{
-        const new_todo = this.state.todo.slice();
-        const flip_added = new_todo.map(task =>{
-          if(task.id == id){
-            task['flip'] = true;
-          }
-          return task;
-        });
-        this.setState({todo:flip_added});
-      });
     } else {
       markActive(id)
       .then(updateTask);

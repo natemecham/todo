@@ -1,27 +1,40 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const ToDoListItem = (props) => {
-  const {isComplete,id,onChange,text,handleDropDown,isMenuOpen,onDelete,flip} = props;
-  const isCompleteClass = isComplete ? 'complete' : 'incomplete';
-  const isMenuOpenClass = isMenuOpen ? 'open' : 'closed';
-  const flipAction = flip ? 'flip' : '';
+class ToDoListItem extends React.Component {
+  componentWillReceiveProps(nextProps) {
+    if (!this.props.isComplete && nextProps.isComplete) {
+      window.requestAnimationFrame(() => {
+        this.label.classList.add("flip");
+      });
+    } else if (this.props.isComplete && !nextProps.isComplete) {
+      window.requestAnimationFrame(() => {
+        this.label.classList.remove("flip");
+      });
+    }
+  }
 
-  return(
-    <li className={ isCompleteClass + ' todo_item'}>
-      <input type="checkbox" checked={isComplete} value={id} id={"list_"+id} onChange={onChange}/>
-      <label htmlFor={"list_"+id} className={flipAction}>
-        {text}
-      </label>
-      <div className={isMenuOpenClass + ' drop_down'}>
-        <button className="toggle_drop"  onClick={handleDropDown}></button>
-        <div className="menu">
-          <Link className="btn" to={`/task/${id}`}>See Details</Link>
-          <button onClick={onDelete} className="delete btn">Delete</button>
+  render() {
+    const {isComplete,id,onChange,text,handleDropDown,isMenuOpen,onDelete,flip} = this.props;
+    const isCompleteClass = isComplete ? 'complete' : 'incomplete';
+    const isMenuOpenClass = isMenuOpen ? 'open' : 'closed';
+
+    return(
+      <li className={ isCompleteClass + ' todo_item'}>
+        <input type="checkbox" checked={isComplete} value={id} id={"list_"+id} onChange={onChange}/>
+        <label ref={(c) => { this.label = c; }} htmlFor={"list_"+id}>
+          {text}
+        </label>
+        <div className={isMenuOpenClass + ' drop_down'}>
+          <button className="toggle_drop"  onClick={handleDropDown}></button>
+          <div className="menu">
+            <Link className="btn" to={`/task/${id}`}>See Details</Link>
+            <button onClick={onDelete} className="delete btn">Delete</button>
+          </div>
         </div>
-      </div>
-    </li>
-  );
+      </li>
+    );
+  }
 }
 
 export default ToDoListItem;
