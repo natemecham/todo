@@ -112,12 +112,6 @@ class ToDo extends React.Component {
     })
   }
 
-  handleDropDown = (i) => {
-    const new_todo = this.state.todo.slice();
-    new_todo[i].isMenuOpen = !new_todo[i].isMenuOpen;
-    this.setState({todo:new_todo});
-  }
-
   handleDelete = (id, index) => {
     const new_todo = this.state.todo.slice();
     deleteTask(id)
@@ -143,7 +137,6 @@ class ToDo extends React.Component {
           list={this.state.todo}
           show={this.state.show}
           onChange={this.handleCheck}
-          handleDropDown={this.handleDropDown}
           onDelete={this.handleDelete}
         />
         <Toggle
