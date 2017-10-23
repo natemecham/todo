@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
-import Nav from './components/Nav';
+//import Nav from './components/Nav';
 import ToDo from './pages/ToDo';
 import TaskPage from './pages/TaskPage';
 
@@ -25,6 +25,9 @@ class App extends React.Component {
   render(){
   return(
     <main>
+      <header>
+        <h1>Do It!</h1>
+      </header>
       <Switch>
         <Route exact path='/' component={ToDo} />
         <Route path='/task/:id' component={TaskPage} />

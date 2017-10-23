@@ -1,12 +1,24 @@
 import React from 'react';
 
 const Input = (props) => {
-  const { handleSubmit, input, handleChange, error } = props;
+  const { handleSubmit, content, due, handleChange, handleDateChange, error } = props;
   const errorState = error ? 'error' : '';
   return(
-    <div className={errorState + " form_wrapper"} onSubmit={handleSubmit}>
-      <form name="new_todo">
-        <input placeholder="What do you need to do?" type="text" value={input} onChange={handleChange} />
+    <div className={errorState + " form_wrapper"} >
+      <form name="new_task" onSubmit={handleSubmit}>
+        <input 
+          placeholder="What do you need to do?" 
+          type="text" 
+          value={content} 
+          onChange={handleChange} 
+        />
+        
+        <input 
+          placeholder="mm/dd/yyyy" 
+          type="date" value={due} 
+          onChange={handleDateChange} 
+        />
+        
         <input type="submit" value="Add" />
       </form>
     </div>

@@ -1,23 +1,30 @@
 import React from 'react';
 import {
   createTask,
+  editTask,
   getTodoList,
   markComplete,
   markActive,
   deleteTask
 } from '../../models/taskApi.js';
 
+import {formatDate} from '../../utilities/dateFunctions.js';
+
 import Input from './Input';
 import Toggle from './Toggle';
-import ToDoList from './ToDoList';
+import TaskList from './TaskList';
+
+
 
 class ToDo extends React.Component {
   constructor(props){
     super(props);
 
     this.state = {
-      input: '',
+      today:formatDate(),
+      content: '',
       input_error:false,
+      due:formatDate(),
       todo: [],
       show: 'all',
       loading: true,
@@ -38,28 +45,36 @@ class ToDo extends React.Component {
     }else{
        this.setState({input_error:false});
     }
-    this.setState({input: e.target.value});
+    this.setState({content: e.target.value});
+  }
+  
+  handleDateChange = (e) => {
+    this.setState({due: e.target.value});
   }
 
   handleSubmit = (e) => {
     e.preventDefault();
-    const input = this.state.input;
-    if (input && input.length < 200) {
+    const input = this.state.content;
+    const due = this.state.due;
+    if (input && input.length < 200 && due) {
       this.setState({input_error:false});
-      createTask(input)
+      createTask(input,due)
       .then((data) => {
         this.setState({
           todo: [data.task, ...this.state.todo],
-          input: '',
+          content: '',
         })
       })
     } else{
         this.setState({input_error:true});
     }
-    
-  }
-
-  // Better to keep this here, this function is small enough that rewriting it isn't a problem
+  }//handleSubmit
+  
+  handleUpdate = (e,id,content,due) => {
+    e.preventDefault();
+    editTask(id,content,due);
+  }//handleUpdate
+  
   handleCheck = (id, complete) => {
     const updateTask = (data) => {
       const { task } = data;
@@ -87,7 +102,6 @@ class ToDo extends React.Component {
   }
 
   handleClearClick = () => {
-    console.log('clear clicked');
     const new_todo = this.state.todo.slice();
     const marked_complete = new_todo.filter(todo => todo.completed);
 
@@ -112,13 +126,8 @@ class ToDo extends React.Component {
     })
   }
 
-  handleDropDown = (i) => {
-    const new_todo = this.state.todo.slice();
-    new_todo[i].isMenuOpen = !new_todo[i].isMenuOpen;
-    this.setState({todo:new_todo});
-  }
-
   handleDelete = (id, index) => {
+    console.log(id);
     const new_todo = this.state.todo.slice();
     deleteTask(id)
     .then((response) => {
@@ -134,17 +143,21 @@ class ToDo extends React.Component {
     return(
       <div className={"todo_wrapper page " + loading } >
         <Input
-          input={this.state.input}
+          content={this.state.content}
+          due={this.state.due}
           handleChange={this.handleChange}
+          handleDateChange={this.handleDateChange}
           handleSubmit={this.handleSubmit}
           error={this.state.input_error}
         />
-        <ToDoList
+        <TaskList
+          today={this.state.today}
           list={this.state.todo}
           show={this.state.show}
           onChange={this.handleCheck}
           handleDropDown={this.handleDropDown}
           onDelete={this.handleDelete}
+          handleUpdate={this.handleUpdate}
         />
         <Toggle
           onClick={this.handleShow}

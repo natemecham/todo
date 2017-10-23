@@ -1,14 +1,15 @@
 import React from 'react';
-import ToDoListItem from './ToDoListItem';
+import Task from './Task';
 
-const ToDoList = (props) => {
-  const { list, onChange, show, handleDropDown, onDelete } = props;
+const TaskList = (props) => {
+  const { list, onChange, show, onDelete, handleUpdate } = props;
+  
   return(
     <ul>
       {list.sort(
           (a,b) => {
-            const aDate = new Date(a.created_at);
-            const bDate = new Date(b.created_at);
+            const aDate = new Date(a.due);
+            const bDate = new Date(b.due);
             return aDate - bDate;
           }
         ).filter((data) => {
@@ -22,17 +23,25 @@ const ToDoList = (props) => {
             default:
               return false;
           }
-        }).map((data,index) => {
-          return <ToDoListItem
-            key={index}
+        }).map((data,index,array) => {
+          let showHeader;
+          if(index === 0 || data.due != array[index-1].due){
+            showHeader = true;
+          }else{
+            showHeader = false;
+          }
+          return <Task
+            showHeader={showHeader}
+            key={data.id}
             id={data.id}
-            text={data.content}
+            due={data.due}
+            content={data.content}
             isComplete={data.completed}
             onChange={() => onChange(data.id, data.completed)}
-            handleDropDown={() => handleDropDown(index)}
             isMenuOpen={data.isMenuOpen}
             onDelete={() => onDelete(data.id, index)}
             flip={data.flip}
+            handleUpdate={handleUpdate}
           />;
         })
       }
@@ -40,4 +49,4 @@ const ToDoList = (props) => {
   );
 }
 
-export default ToDoList;
+export default TaskList;

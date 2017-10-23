@@ -1,6 +1,6 @@
 import {corsRequest, handleErrors} from '../utilities/fetchHelpers.js';
 
-const getAPIKey = () => {
+/*const getAPIKey = () => {
   const url = 'https://altcademy-to-do-list-api.herokuapp.com/users';
   const header = {
     method: 'post'
@@ -12,7 +12,7 @@ const getAPIKey = () => {
   }).catch((err) => {
     console.error(err);
   });
-}
+}*/
 // run once to get started: getAPIKey()
 
 const api_key = process.env.REACT_APP_API_KEY;
@@ -36,19 +36,21 @@ export const getSingleTask = (id) => {
    .then(handleErrors)
    .then(data => {
       return data.tasks.find(task => {
-        return id == task.id
+        return id === task.id
       });
    })
 }
 
 
-export const createTask = (content) => {
+export const createTask = (content,due) => {
   const url = `https://altcademy-to-do-list-api.herokuapp.com/tasks?api_key=${api_key}`;
+  const dueDateTime = new Date(due);
   const options = {
     method: 'POST',
     body: JSON.stringify({
       task: {
-        content
+        content: content,
+        due: dueDateTime
       }
     })
   };
@@ -56,6 +58,25 @@ export const createTask = (content) => {
   return fetch(url, corsRequest(options))
   .then(handleErrors)
 }
+
+export const editTask = (id,content,due) => {
+  const url = `https://altcademy-to-do-list-api.herokuapp.com/tasks/${id}?api_key=${api_key}`;
+  const dueDateTime = new Date(due);
+  const options = {
+    method: 'PUT',
+    body: JSON.stringify({
+      task: {
+        content: content,
+        due: dueDateTime
+      }
+    })
+  };
+    console.dir(options);
+  return fetch(url, corsRequest(options))
+  .then(handleErrors)
+}
+
+
 
 export const markComplete = (id) => {
   const url = `https://altcademy-to-do-list-api.herokuapp.com/tasks/${id}/mark_complete?api_key=${api_key}`;
