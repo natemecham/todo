@@ -1,15 +1,46 @@
+.sq {
+  width: 20px;
+  height: 20px; }
+
+.sq1 {
+  background-color: #EBEDED; }
+
+.sq2 {
+  background-color: #E2E2E2; }
+
+.sq3 {
+  background-color: #CACACA; }
+
+.sq4 {
+  background-color: #CACACA; }
+
+.sq5 {
+  background-color: #B9B9B9; }
+
+.sq6 {
+  background-color: #95989A; }
+
 * {
   box-sizing: border-box; }
 
 body {
-  background-color: #EBEDED; }
+  background-color: #EBEDED;
+  font-family: 'Catamaran', sans-serif;
+  font-weight: 400;
+  position: relative;
+  padding-bottom: 40px; }
 
 .todo_wrapper {
   width: 88%;
   margin: 0 auto; }
 
+form[name="new_task"] {
+  margin-bottom: 25px; }
+
 input {
-  outline-color: #82BDEA; }
+  outline-color: #82BDEA;
+  font-family: 'Catamaran', sans-serif;
+  font-weight: 400; }
 
 input[type="text"], input[type="date"] {
   background-color: #fff;
@@ -21,8 +52,8 @@ input[type="text"], input[type="date"] {
   color: #95989A;
   padding: 0;
   text-indent: 11px; }
-  input[type="text"]::plachholder, input[type="date"]::plachholder {
-    color: #DEDFDF; }
+  input[type="text"]::placeholder, input[type="date"]::placeholder {
+    color: #E2E2E2; }
 
 input[type="date"] {
   width: 60%;
@@ -34,7 +65,7 @@ input[type="submit"] {
   width: calc(40% - 7px);
   background-color: #3879AB;
   border: 1px solid #82BDEA;
-  color: #DEDFDF;
+  color: #B9B9B9;
   font-size: 20px;
   padding: 0;
   text-transform: uppercase;
@@ -46,41 +77,97 @@ ul {
   padding: 0;
   margin: 0;
   background-color: #fff;
-  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.5); }
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.5);
+  overflow: hidden; }
 
 h2 {
-  background-color: #E2E2E2;
+  background-color: #0D1929;
   width: 100%;
   height: 36px;
-  color: #0D1929;
+  color: #fff;
   font-size: 16px;
   text-align: left;
   padding: 0 0 0 11px;
   line-height: 36px;
   vertical-align: middle;
-  margin: 0; }
+  margin: 0;
+  font-family: 'Catamaran', sans-serif;
+  font-weight: 700;
+  letter-spacing: 1px; }
 
 li {
   list-style: none;
   margin: 0 12px 12px 12px;
   height: 55px;
   padding: 12px 0 0 0;
-  border-bottom: solid 1px #d8d5d5;
+  border-top: solid 1px #d8d5d5;
   position: relative;
-  z-index: 5;
-  overflow: hidden; }
+  z-index: 5; }
+
+li.header {
+  margin: 0 0 0 0;
+  height: 103px;
+  padding-top: 0;
+  border-top: none;
+  width: calc(100%); }
+  li.header .task_wrapper {
+    width: calc(100% - 24px);
+    margin: 0 0 0px 12px;
+    padding-top: 12px;
+    border-top: none; }
+  li.header .drop_down {
+    height: 67px;
+    bottom: 0;
+    top: 0px; }
+
+li.edit {
+  background-color: #EBEDED;
+  margin: 0;
+  padding-top: 0;
+  height: 143px;
+  border-bottom: 1px solid #CACACA;
+  border-top: 1px solid #CACACA;
+  width: 100%; }
+  li.edit.header {
+    height: 188px; }
+  li.edit .task_wrapper {
+    width: calc(100% - 24px);
+    margin: 0 0 0px 12px;
+    height: auto; }
+  li.edit form {
+    margin: 0 0 0 50px;
+    width: 88%; }
+    li.edit form input {
+      padding-top: 3px;
+      line-height: 14px;
+      font-size: 14px;
+      height: 30px;
+      top: -6px;
+      position: relative; }
+  li.edit .drop_down {
+    display: none; }
+  li.edit + li {
+    border-top: none; }
+
+.task_wrapper {
+  position: relative;
+  width: 100%;
+  height: 55px;
+  padding: 0;
+  transition: transform .25s ease-out; }
 
 input[type="checkbox"] {
   position: absolute;
   left: -9999px; }
 
 [type="checkbox"] + label {
-  display: block;
+  display: inline-block;
   position: relative;
   line-height: 34px;
   padding-left: 50px;
+  padding-top: 5px;
   z-index: 9;
-  width: 95%;
+  width: auto;
   font-size: 14px;
   color: #95989A; }
 
@@ -88,7 +175,7 @@ input[type="checkbox"] {
   content: '';
   border: 1px solid #CACACA;
   position: absolute;
-  top: 0;
+  top: 5px;
   left: 0;
   width: 30px;
   height: 30px;
@@ -107,7 +194,7 @@ input[type="checkbox"] {
   transform: rotate(20deg);
   width: 0px;
   height: 0px;
-  top: 14px;
+  top: 19px;
   left: 15px;
   border-left: 0px solid #2bce51;
   border-bottom: 0px solid #2bce51;
@@ -118,45 +205,135 @@ input[type="checkbox"] {
   height: 9px;
   border-left: 3px solid #3879AB;
   border-bottom: 3px solid #3879AB;
-  top: 2px;
+  top: 7px;
   left: 7px;
   transform: rotate(-48deg);
   transition: all 0.35s cubic-bezier(0.09, 1.47, 0.95, 1.15); }
 
 .drop_down {
   position: absolute;
-  top: 0;
-  right: -12px;
-  height: calc(100% + 12px);
-  width: 10px;
-  transition: width 1s ease-out; }
+  top: -13px;
+  right: -132px;
+  height: calc(100% + 13px);
+  width: 120px;
+  transition: width 1s ease-out;
+  background-color: #CACACA;
+  transition: transform .25s ease-out;
+  border-top: 1px solid #CACACA; }
   .drop_down .toggle_drop {
     position: absolute;
-    height: 17px;
-    width: 4px;
-    left: -12px;
-    top: 12px;
+    background-color: #fff;
+    width: 25px;
+    top: -1px;
+    left: -25px;
     border: none;
-    background-color: #EC2C42; }
+    height: calc(100% + 1px);
+    outline: none;
+    cursor: pointer;
+    transition: background-color .25s ease; }
+    .drop_down .toggle_drop::before {
+      content: '';
+      width: 4px;
+      height: 36px;
+      border-left: 4px #E2E2E2 dotted;
+      background-color: transparent;
+      position: absolute;
+      top: 15px;
+      left: 10px; }
+    .drop_down .toggle_drop:hover {
+      background-color: #EBEDED; }
+      .drop_down .toggle_drop:hover::before {
+        border-left: 4px #fff dotted; }
   .drop_down .menu {
-    display: none; }
+    height: 67px; }
 
 .menuOpen .drop_down {
-  top: 0;
-  right: -12px;
-  width: 120px;
-  background-color: #E2E2E2;
-  z-index: 15; }
-  .menuOpen .drop_down .menu {
-    display: flex;
-    height: 55px;
-    justify-content: space-evenly; }
-    .menuOpen .drop_down .menu .btn {
-      height: 26px;
-      background-color: #0D1929;
-      border: 1px solid #2F4F90;
-      color: #fff;
-      font-size: 12px; }
-      .menuOpen .drop_down .menu .btn.delete {
-        background-color: #EC2C42;
-        border: 1px solid #F0838F; }
+  z-index: 50;
+  transform: translateX(-120px); }
+  .menuOpen .drop_down .toggle_drop {
+    border-top: 1px solid #CACACA; }
+
+.menuOpen.header .drop_down .toggle_drop {
+  border-top: none; }
+
+.btn {
+  height: 26px;
+  background-color: #2F4F90;
+  border: 1px solid #2F4F90;
+  color: #fff;
+  font-size: 12px;
+  margin: 20px 0 0 13px; }
+  .btn.delete {
+    background-color: #EC2C42;
+    border: 1px solid #F0838F;
+    margin: 20px 0px 0px 10px; }
+
+button {
+  cursor: pointer; }
+
+.toggle {
+  position: fixed;
+  width: 100%;
+  left: 0;
+  right: 0;
+  background-color: #0D1929;
+  bottom: 0;
+  height: 40px;
+  z-index: 90; }
+  .toggle + .curtain {
+    z-index: 89;
+    bottom: 40px;
+    right: 0;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    transition: opacity .25s ease-out; }
+  .toggle button {
+    color: #fff; }
+  .toggle.showMenu .toggle_menu {
+    transform: translateY(-178px); }
+  .toggle.showMenu + .curtain {
+    opacity: 1;
+    position: fixed;
+    top: 0;
+    left: 0; }
+  .toggle .toggle_menu {
+    z-index: 95;
+    background-color: #EBEDED;
+    width: 85%;
+    left: 7.5%;
+    margin: 0 auto;
+    bottom: -136px;
+    position: absolute;
+    transition: transform .25s ease-out; }
+    .toggle .toggle_menu .toggle_menu_header {
+      background-color: #3879AB;
+      height: 25px;
+      line-height: 25px;
+      margin: 0 0 10px 0; }
+      .toggle .toggle_menu .toggle_menu_header p {
+        text-indent: 10px;
+        color: #fff;
+        margin: 0;
+        font-weight: 300;
+        text-transform: uppercase;
+        font-size: 10px;
+        letter-spacing: 1px; }
+    .toggle .toggle_menu label {
+      color: #0D1929;
+      width: 85%;
+      margin: 0 auto;
+      display: block;
+      padding: 0 0 0 20px; }
+      .toggle .toggle_menu label:before {
+        width: 10px;
+        height: 10px;
+        top: 8px; }
+      .toggle .toggle_menu label:after {
+        left: 2px;
+        top: 6px;
+        width: 12px;
+        height: 4px; }
+    .toggle .toggle_menu .toggle_filter {
+      color: #fff; }

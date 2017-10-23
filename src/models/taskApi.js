@@ -44,7 +44,8 @@ export const getSingleTask = (id) => {
 
 export const createTask = (content,due) => {
   const url = `https://altcademy-to-do-list-api.herokuapp.com/tasks?api_key=${api_key}`;
-  const dueDateTime = new Date(due);
+  let dueDateTime = new Date(due);
+  dueDateTime.setHours(dueDateTime.getHours()+12);
   const options = {
     method: 'POST',
     body: JSON.stringify({
@@ -61,7 +62,8 @@ export const createTask = (content,due) => {
 
 export const editTask = (id,content,due) => {
   const url = `https://altcademy-to-do-list-api.herokuapp.com/tasks/${id}?api_key=${api_key}`;
-  const dueDateTime = new Date(due);
+  let dueDateTime = new Date(due);
+  dueDateTime.setHours(dueDateTime.getHours()+12);
   const options = {
     method: 'PUT',
     body: JSON.stringify({

@@ -67,9 +67,10 @@ class Task extends React.Component {
       'menuOpen' :this.state.isMenuOpen,
       'edit': this.state.isEdit,
       'todo_item':true,
+      'header': showHeader
     });
     
-    let header;
+    let header,headerClass;
     if(showHeader){
       header = <h2>{printDate(due)}</h2>;
     }
@@ -77,56 +78,59 @@ class Task extends React.Component {
     if(this.state.isEdit){
       return(
         <li className={taskClasses}>
-          <input type="checkbox" checked={isComplete} value={id} id={"list_"+id} onChange={onChange}/>
-          <label ref={(c) => { this.label = c; }} htmlFor={"list_"+id}></label>
-            <form 
-              name="update_task" 
-              onSubmit={
-                (e)=>{
-                  this.handleUpdate(e,id,this.state.editContent,this.state.editDue);
+          {header}
+          <div className='task_wrapper'>
+            <input type="checkbox" checked={isComplete} value={id} id={"list_"+id} onChange={onChange}/>
+            <label ref={(c) => { this.label = c; }} htmlFor={"list_"+id}></label>
+              <form 
+                name="update_task" 
+                onSubmit={
+                  (e)=>{
+                    this.handleUpdate(e,id,this.state.editContent,this.state.editDue);
+                  }
                 }
-              }
-            >
-              <input 
-                placeholder="What do you need to do?" 
-                onChange={this.handleChange} type="text" 
-                value={this.state.editContent} 
-              />
-              <input 
-                placeholder="mm/dd/yyyy" 
-                type="date" 
-                onChange={this.handleDateChange} 
-                value={this.state.editDue}  
-              />
-              
-              <input type="submit" value="Update" />
-              <button onClick={this.handleCancel}>Cancel</button>
-            </form>
-          
-          <TaskMenu 
-            handleEdit={this.handleEdit}
-            handleDropDown={this.handleDropDown}
-            onDelete={onDelete}
-          />
-        </li>
-      );
-    }else{
-      return(
-        <div>
-        {header}
-       <li className={taskClasses}>
-          <input type="checkbox" checked={isComplete} value={id} id={"list_"+id} onChange={onChange}/>
-          <label ref={(c) => { this.label = c; }} htmlFor={"list_"+id}>
-            {this.state.editContent}
-             {id}
-          </label>
+              >
+                <input 
+                  placeholder="What do you need to do?" 
+                  onChange={this.handleChange} type="text" 
+                  value={this.state.editContent} 
+                />
+                <input 
+                  placeholder="mm/dd/yyyy" 
+                  type="date" 
+                  onChange={this.handleDateChange} 
+                  value={this.state.editDue}  
+                />
+                
+                <input type="submit" value="Update" />
+                <button onClick={this.handleCancel}>Cancel</button>
+              </form>
+            
             <TaskMenu 
               handleEdit={this.handleEdit}
               handleDropDown={this.handleDropDown}
               onDelete={onDelete}
             />
+            </div>
         </li>
-        </div>
+      );
+    }else{
+      return(
+        
+       <li className={taskClasses}>
+         {header}
+          <div className='task_wrapper'>
+            <input type="checkbox" checked={isComplete} value={id} id={"list_"+id} onChange={onChange}/>
+            <label ref={(c) => { this.label = c; }} htmlFor={"list_"+id}>
+              {this.state.editContent}
+            </label>
+            <TaskMenu 
+              handleEdit={this.handleEdit}
+              handleDropDown={this.handleDropDown}
+              onDelete={onDelete}
+            />
+          </div>
+        </li>
       );
     }
   }

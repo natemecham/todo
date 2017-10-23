@@ -40,6 +40,6 @@ export const printDate = (dateString) => {
 	if(mm<10) {
 	    mm = '0'+mm
 	} 
-	today =  dd + '/' + mm + '/' + yy ;
+	today =  mm + '/' + dd + '/' + yy ;
 	return today;
 }

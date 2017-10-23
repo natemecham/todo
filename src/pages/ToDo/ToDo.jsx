@@ -28,6 +28,8 @@ class ToDo extends React.Component {
       todo: [],
       show: 'all',
       loading: true,
+      showMenu: false,
+      showClear: false,
     }
   }
 
@@ -56,6 +58,7 @@ class ToDo extends React.Component {
     e.preventDefault();
     const input = this.state.content;
     const due = this.state.due;
+    console.log(due);
     if (input && input.length < 200 && due) {
       this.setState({input_error:false});
       createTask(input,due)
@@ -63,6 +66,7 @@ class ToDo extends React.Component {
         this.setState({
           todo: [data.task, ...this.state.todo],
           content: '',
+          due: formatDate()
         })
       })
     } else{
@@ -72,7 +76,13 @@ class ToDo extends React.Component {
   
   handleUpdate = (e,id,content,due) => {
     e.preventDefault();
-    editTask(id,content,due);
+    editTask(id,content,due)
+    .then((data)=>{
+      getTodoList().then((data) =>{
+        this.setState({todo:data.tasks});
+      });
+  
+    })
   }//handleUpdate
   
   handleCheck = (id, complete) => {
@@ -161,6 +171,7 @@ class ToDo extends React.Component {
         />
         <Toggle
           onClick={this.handleShow}
+          showMenu={this.state.showMenu}
           show={this.state.show}
           onClearClick={this.handleClearClick}
           todo={this.state.todo}

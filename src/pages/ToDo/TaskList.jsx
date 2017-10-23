@@ -10,7 +10,7 @@ const TaskList = (props) => {
           (a,b) => {
             const aDate = new Date(a.due);
             const bDate = new Date(b.due);
-            return aDate - bDate;
+            return bDate - aDate;
           }
         ).filter((data) => {
           switch (show){
