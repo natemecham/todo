@@ -2,7 +2,17 @@ import React from 'react';
 import Task from './Task';
 
 const TaskList = (props) => {
-  const { list, onChange, show, onDelete, handleUpdate } = props;
+  const { list, onChange, show, onDelete, handleUpdate, today } = props;
+  
+  const isOverDue = (t,d,c) =>{
+    const aToday = new Date(t);
+    const aDue = new Date(d);
+    if(aToday > aDue && !c){
+      return true;
+    }else{
+      return false;
+    }
+  }
   
   return(
     <ul>
@@ -24,6 +34,10 @@ const TaskList = (props) => {
               return false;
           }
         }).map((data,index,array) => {
+          
+          
+          const overDue = isOverDue(today, data.due,data.completed);
+          
           let showHeader;
           if(index === 0 || data.due != array[index-1].due){
             showHeader = true;
@@ -42,6 +56,7 @@ const TaskList = (props) => {
             onDelete={() => onDelete(data.id, index)}
             flip={data.flip}
             handleUpdate={handleUpdate}
+            isOverDue={overDue}
           />;
         })
       }

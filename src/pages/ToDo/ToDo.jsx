@@ -108,8 +108,27 @@ class ToDo extends React.Component {
   }
 
   handleShow = (i) => {
-    this.setState({ show: i });
+    this.setState({ 
+      show: i, 
+      showMenu:false,
+      });
   }
+  
+  toggleMenu = (i) => {
+    this.setState({
+      showMenu: !this.state.showMenu,
+      showClear: false
+    })
+  }
+  
+  
+  toggleClear = (i) => {
+    this.setState({
+      showClear: !this.state.showClear,
+      showMenu: false
+    })
+  }
+  
 
   handleClearClick = () => {
     const new_todo = this.state.todo.slice();
@@ -132,7 +151,10 @@ class ToDo extends React.Component {
 
     Promise.all(promises)
     .then(() => {
-      this.setState({ todo: new_todo });
+      this.setState({ 
+        todo: new_todo,
+        showClear: false 
+        });
     })
   }
 
@@ -172,6 +194,9 @@ class ToDo extends React.Component {
         <Toggle
           onClick={this.handleShow}
           showMenu={this.state.showMenu}
+          showClear={this.state.showClear}
+          toggleMenu={this.toggleMenu}
+          toggleClear={this.toggleClear}
           show={this.state.show}
           onClearClick={this.handleClearClick}
           todo={this.state.todo}

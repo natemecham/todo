@@ -61,13 +61,14 @@ class Task extends React.Component {
   }
 
   render() {
-    const {isComplete,id,onChange,onDelete,showHeader,due} = this.props;
+    const {isComplete,id,onChange,onDelete,showHeader,due,isOverDue} = this.props;
     const taskClasses =classNames({
       'complete' : isComplete,
       'menuOpen' :this.state.isMenuOpen,
       'edit': this.state.isEdit,
       'todo_item':true,
-      'header': showHeader
+      'header': showHeader,
+      'overdue': isOverDue,
     });
     
     let header,headerClass;

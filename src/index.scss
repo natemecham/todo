@@ -14,32 +14,6 @@ $lightRed:#F0838F;
 $white:#fff;
 
 
-
-
-.sq{
-  width: 20px;
-  height: 20px;
-}
-
-.sq1{
-  background-color: $gray1;
-}
-.sq2{
-  background-color: $gray2;
-}
-.sq3{
-  background-color: $gray4;
-}
-.sq4{
-  background-color: $gray4;
-}
-.sq5{
-  background-color: $gray5;
-}
-.sq6{
-  background-color: $gray6;
-}
-
 *{
   box-sizing: border-box;
 }
@@ -94,7 +68,7 @@ input[type="submit"]{
   width: calc(40% - 7px);
   background-color: $lightBlue2;
   border: 1px solid $lightBlue1;
-  color: $gray5;
+  color: $gray1;
   font-size: 20px;
   padding: 0;
   text-transform: uppercase;
@@ -125,39 +99,54 @@ h2{
   font-family: 'Catamaran', sans-serif;
   font-weight: 700;
   letter-spacing: 1px;
-
+  position: relative;
 }
 
 li{
   list-style:none;
-  margin:0 12px 12px 12px;
-  height: 55px;
-  padding:12px 0 0 0;
-  border-top: solid 1px #d8d5d5;
-  position: relative;
-  z-index: 5;
-}
-
-li.header{
   margin:0 0 0 0;
-  height: 103px;
-  padding-top:0;
-  border-top: none;
-  width: calc(100%);
+  width: 100%;
+  overflow: auto;
+  position: relative;
+  &.overdue{
+    .task_wrapper::before{
+      content: '';
+      z-index: 35;
+      width: 3px;
+      height: 100%;
+      position: absolute;
+      left:-12px;
+      top:0;
+      background-color: $red;
+      overflow: visible;
+    }
+    &.header{
+    }
+  }
   .task_wrapper{
     width: calc(100% - 24px);
      margin:0 0 0px 12px;
      padding-top: 12px;
-     border-top: none;
+     border-top: 1px solid $gray4;
+     height: 67px;
   }
-  
-  .drop_down{
-    height: 67px;
-    bottom: 0;
-    top: 0px;
-  }
-  
 }
+
+li.header{
+  min-height: 103px;
+  
+  .task_wrapper{
+    border-top: none;
+    .drop_down{
+      top:0;
+      .toggle_drop{
+        border: none;
+        border-top:none;
+      }
+    }
+  }
+  
+}//li.header
 
 li.edit{
   background-color: $gray1;
@@ -276,9 +265,9 @@ input[type="checkbox"]{
 
 .drop_down{
   position: absolute;
-  top:-13px;
+  top:-1px;
   right: -132px;
-  height: calc(100% + 13px);
+  height: calc(100% + 1px) ;
   width: 120px;
   transition: width 1s ease-out;
   background-color:$gray4;
@@ -288,10 +277,10 @@ input[type="checkbox"]{
     position: absolute;
     background-color: $white;
     width: 25px;
-    top:-1px;
+    top:0;
     left: -25px;
     border: none;
-    height: calc(100% + 1px);
+    height: 100%;
     outline: none;
     cursor: pointer;
     transition: background-color .25s ease;
@@ -304,12 +293,6 @@ input[type="checkbox"]{
       position: absolute;
       top:15px;
       left:10px;
-    }
-    &:hover{
-      background-color:$gray1;
-      &::before{
-         border-left: 4px $white dotted;
-      }
     }
   }
   
@@ -325,6 +308,8 @@ input[type="checkbox"]{
     transform: translateX(-120px);
     .toggle_drop{
       border-top: 1px solid $gray4;
+      height: calc(100% + 1px);
+      top:-1px;
     }
   }
   
@@ -340,9 +325,9 @@ input[type="checkbox"]{
 
  .btn{
   height: 26px;
-  background-color: $darkBlue1;
+  background-color: $darkBlue;
   border: 1px solid $darkBlue1;
-  color: $white;
+  color: $gray1;
   font-size: 12px;
   margin: 20px 0 0 13px;
   
@@ -356,6 +341,7 @@ input[type="checkbox"]{
 
 button{
   cursor: pointer;
+  outline: none;
 }
 
 
@@ -368,46 +354,46 @@ button{
   bottom: 0;
   height: 40px;
   z-index: 90;
-  & + .curtain{
+  & ~ .curtain{
     z-index: 89;
     bottom: 40px;
     right:0;
-    opacity: 0;
+    opacity:0;
     width: 100%;
     height: 100%;
     background-color: rgba(0,0,0,.7);
     transition: opacity .25s ease-out;
   }
-  button{
-    color: $white;
-  }
   
-  &.showMenu{
-    .toggle_menu{
-      transform: translateY(-178px);
-    }
-    & + .curtain{
-      opacity: 1;
-      position:fixed;
-      top:0;
-      left: 0;
-    }
-  }
-  
-  .toggle_menu{
+  .foot_menu{
     z-index: 95;
     background-color: $gray1;
     width: 85%;
     left:7.5%;
     margin: 0 auto;
-    bottom: -136px;
+    bottom: -137px;
+    opacity: 0;
     position: absolute;
-    transition: transform .25s ease-out;
-    .toggle_menu_header{
+    transition-property: transform, opacity;
+    transition-duration: .25s;
+    transition-timing-function: ease;
+    
+    &::before{
+      content:'';
+      width: 12px;
+      height: 12px;
+      position: absolute;
+      bottom: -6px;
+      transform: rotate(45deg);
+      background-color: $gray1;
+    }
+    
+    .foot_menu_header{
       background-color: $lightBlue2;
       height: 25px;
       line-height: 25px;
       margin: 0 0 10px 0;
+      color: $white;
       p{
         text-indent: 10px;
         color: $white;
@@ -416,8 +402,44 @@ button{
         text-transform: uppercase;
         font-size: 10px;
         letter-spacing: 1px;
+        button{
+          color: $white;
+          float: right;
+          text-transform: uppercase;
+          font-size: 10px;
+          letter-spacing: 1px;
+          font-weight: 300;
+          margin-right: 3px;
+        }
       }
     }
+    
+    &.toggle_menu{
+      &::before{left: 12px;}
+     .foot_menu_header{
+        background-color: $lightBlue2;
+      }
+    }
+    
+    &.clear_menu{
+        text-align: center;
+        padding-bottom: 20px;
+        &::before{right: 12px;}
+       .foot_menu_header{
+         margin-bottom: 20px;
+          background-color: $red;
+        }
+        
+        button.clear{
+          background-color: $red;
+          border: 1px solid $lightRed;
+          margin: 0;
+          color: $white;
+          padding: 10px;
+          font-size: 12px;
+        } 
+    }
+    
     label{
       color: $darkBlue;
       width: 85%;
@@ -436,15 +458,78 @@ button{
         width: 12px;
         height: 4px;
       }
-      
-      
     }
     
-    .toggle_filter{
-      color: $white;
-      
-    }
-    
-  }//.toggle_menu
+  }//foot_menu
   
+}//toggle
+
+.toggle_footer{
+  width: 100%;
+  height: 40px;
+  line-height: 40px;
+  button{
+    display: inline-block;
+    color: $white;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 1px;
+    margin: 0;
+    padding: 0;
+    line-height: 40px;
+    height: 40px;
+    width: 50px;
+    border: none;
+    background-color: transparent;
+    &.toggle_filter{
+      float: left;
+      margin-left: 10px;
+    }
+    &.toggle_clear{
+      float: right;
+      margin-right: 10px;
+      position: relative;
+      &::before{
+        content: '';
+        display: block;
+        width: 30px;
+        height: 4px;
+        top:0;
+        left:10px;
+        border-top: 4px dotted $white;
+      }
+    }
+  }
 }
+
+/* ShowMenu */
+
+.toggle.showMenu{
+  .toggle_menu{
+    opacity: 1;
+    transform: translateY(-178px);
+  }
+  
+  & ~ .curtain{
+    opacity: 1;
+    position:fixed;
+    top:0;
+    left: 0;
+  }
+}
+
+/* ShowClear */
+.toggle.showClear{
+  .clear_menu{
+    opacity: 1;
+    transform: translateY(-178px);
+  }
+  
+  & ~ .curtain{
+    opacity: 1;
+    position:fixed;
+    top:0;
+    left: 0;
+  }
+}
+ 

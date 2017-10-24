@@ -1,25 +1,3 @@
-.sq {
-  width: 20px;
-  height: 20px; }
-
-.sq1 {
-  background-color: #EBEDED; }
-
-.sq2 {
-  background-color: #E2E2E2; }
-
-.sq3 {
-  background-color: #CACACA; }
-
-.sq4 {
-  background-color: #CACACA; }
-
-.sq5 {
-  background-color: #B9B9B9; }
-
-.sq6 {
-  background-color: #95989A; }
-
 * {
   box-sizing: border-box; }
 
@@ -65,7 +43,7 @@ input[type="submit"] {
   width: calc(40% - 7px);
   background-color: #3879AB;
   border: 1px solid #82BDEA;
-  color: #B9B9B9;
+  color: #EBEDED;
   font-size: 20px;
   padding: 0;
   text-transform: uppercase;
@@ -93,32 +71,41 @@ h2 {
   margin: 0;
   font-family: 'Catamaran', sans-serif;
   font-weight: 700;
-  letter-spacing: 1px; }
+  letter-spacing: 1px;
+  position: relative; }
 
 li {
   list-style: none;
-  margin: 0 12px 12px 12px;
-  height: 55px;
-  padding: 12px 0 0 0;
-  border-top: solid 1px #d8d5d5;
-  position: relative;
-  z-index: 5; }
-
-li.header {
   margin: 0 0 0 0;
-  height: 103px;
-  padding-top: 0;
-  border-top: none;
-  width: calc(100%); }
-  li.header .task_wrapper {
+  width: 100%;
+  overflow: auto;
+  position: relative; }
+  li.overdue .task_wrapper::before {
+    content: '';
+    z-index: 35;
+    width: 3px;
+    height: 100%;
+    position: absolute;
+    left: -12px;
+    top: 0;
+    background-color: #EC2C42;
+    overflow: visible; }
+  li .task_wrapper {
     width: calc(100% - 24px);
     margin: 0 0 0px 12px;
     padding-top: 12px;
+    border-top: 1px solid #CACACA;
+    height: 67px; }
+
+li.header {
+  min-height: 103px; }
+  li.header .task_wrapper {
     border-top: none; }
-  li.header .drop_down {
-    height: 67px;
-    bottom: 0;
-    top: 0px; }
+    li.header .task_wrapper .drop_down {
+      top: 0; }
+      li.header .task_wrapper .drop_down .toggle_drop {
+        border: none;
+        border-top: none; }
 
 li.edit {
   background-color: #EBEDED;
@@ -212,9 +199,9 @@ input[type="checkbox"] {
 
 .drop_down {
   position: absolute;
-  top: -13px;
+  top: -1px;
   right: -132px;
-  height: calc(100% + 13px);
+  height: calc(100% + 1px);
   width: 120px;
   transition: width 1s ease-out;
   background-color: #CACACA;
@@ -224,10 +211,10 @@ input[type="checkbox"] {
     position: absolute;
     background-color: #fff;
     width: 25px;
-    top: -1px;
+    top: 0;
     left: -25px;
     border: none;
-    height: calc(100% + 1px);
+    height: 100%;
     outline: none;
     cursor: pointer;
     transition: background-color .25s ease; }
@@ -240,10 +227,6 @@ input[type="checkbox"] {
       position: absolute;
       top: 15px;
       left: 10px; }
-    .drop_down .toggle_drop:hover {
-      background-color: #EBEDED; }
-      .drop_down .toggle_drop:hover::before {
-        border-left: 4px #fff dotted; }
   .drop_down .menu {
     height: 67px; }
 
@@ -251,16 +234,18 @@ input[type="checkbox"] {
   z-index: 50;
   transform: translateX(-120px); }
   .menuOpen .drop_down .toggle_drop {
-    border-top: 1px solid #CACACA; }
+    border-top: 1px solid #CACACA;
+    height: calc(100% + 1px);
+    top: -1px; }
 
 .menuOpen.header .drop_down .toggle_drop {
   border-top: none; }
 
 .btn {
   height: 26px;
-  background-color: #2F4F90;
+  background-color: #0D1929;
   border: 1px solid #2F4F90;
-  color: #fff;
+  color: #EBEDED;
   font-size: 12px;
   margin: 20px 0 0 13px; }
   .btn.delete {
@@ -269,7 +254,8 @@ input[type="checkbox"] {
     margin: 20px 0px 0px 10px; }
 
 button {
-  cursor: pointer; }
+  cursor: pointer;
+  outline: none; }
 
 .toggle {
   position: fixed;
@@ -280,7 +266,7 @@ button {
   bottom: 0;
   height: 40px;
   z-index: 90; }
-  .toggle + .curtain {
+  .toggle ~ .curtain {
     z-index: 89;
     bottom: 40px;
     right: 0;
@@ -289,30 +275,33 @@ button {
     height: 100%;
     background-color: rgba(0, 0, 0, 0.7);
     transition: opacity .25s ease-out; }
-  .toggle button {
-    color: #fff; }
-  .toggle.showMenu .toggle_menu {
-    transform: translateY(-178px); }
-  .toggle.showMenu + .curtain {
-    opacity: 1;
-    position: fixed;
-    top: 0;
-    left: 0; }
-  .toggle .toggle_menu {
+  .toggle .foot_menu {
     z-index: 95;
     background-color: #EBEDED;
     width: 85%;
     left: 7.5%;
     margin: 0 auto;
-    bottom: -136px;
+    bottom: -137px;
+    opacity: 0;
     position: absolute;
-    transition: transform .25s ease-out; }
-    .toggle .toggle_menu .toggle_menu_header {
+    transition-property: transform, opacity;
+    transition-duration: .25s;
+    transition-timing-function: ease; }
+    .toggle .foot_menu::before {
+      content: '';
+      width: 12px;
+      height: 12px;
+      position: absolute;
+      bottom: -6px;
+      transform: rotate(45deg);
+      background-color: #EBEDED; }
+    .toggle .foot_menu .foot_menu_header {
       background-color: #3879AB;
       height: 25px;
       line-height: 25px;
-      margin: 0 0 10px 0; }
-      .toggle .toggle_menu .toggle_menu_header p {
+      margin: 0 0 10px 0;
+      color: #fff; }
+      .toggle .foot_menu .foot_menu_header p {
         text-indent: 10px;
         color: #fff;
         margin: 0;
@@ -320,20 +309,100 @@ button {
         text-transform: uppercase;
         font-size: 10px;
         letter-spacing: 1px; }
-    .toggle .toggle_menu label {
+        .toggle .foot_menu .foot_menu_header p button {
+          color: #fff;
+          float: right;
+          text-transform: uppercase;
+          font-size: 10px;
+          letter-spacing: 1px;
+          font-weight: 300;
+          margin-right: 3px; }
+    .toggle .foot_menu.toggle_menu::before {
+      left: 12px; }
+    .toggle .foot_menu.toggle_menu .foot_menu_header {
+      background-color: #3879AB; }
+    .toggle .foot_menu.clear_menu {
+      text-align: center;
+      padding-bottom: 20px; }
+      .toggle .foot_menu.clear_menu::before {
+        right: 12px; }
+      .toggle .foot_menu.clear_menu .foot_menu_header {
+        margin-bottom: 20px;
+        background-color: #EC2C42; }
+      .toggle .foot_menu.clear_menu button.clear {
+        background-color: #EC2C42;
+        border: 1px solid #F0838F;
+        margin: 0;
+        color: #fff;
+        padding: 10px;
+        font-size: 12px; }
+    .toggle .foot_menu label {
       color: #0D1929;
       width: 85%;
       margin: 0 auto;
       display: block;
       padding: 0 0 0 20px; }
-      .toggle .toggle_menu label:before {
+      .toggle .foot_menu label:before {
         width: 10px;
         height: 10px;
         top: 8px; }
-      .toggle .toggle_menu label:after {
+      .toggle .foot_menu label:after {
         left: 2px;
         top: 6px;
         width: 12px;
         height: 4px; }
-    .toggle .toggle_menu .toggle_filter {
-      color: #fff; }
+
+.toggle_footer {
+  width: 100%;
+  height: 40px;
+  line-height: 40px; }
+  .toggle_footer button {
+    display: inline-block;
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 1px;
+    margin: 0;
+    padding: 0;
+    line-height: 40px;
+    height: 40px;
+    width: 50px;
+    border: none;
+    background-color: transparent; }
+    .toggle_footer button.toggle_filter {
+      float: left;
+      margin-left: 10px; }
+    .toggle_footer button.toggle_clear {
+      float: right;
+      margin-right: 10px;
+      position: relative; }
+      .toggle_footer button.toggle_clear::before {
+        content: '';
+        display: block;
+        width: 30px;
+        height: 4px;
+        top: 0;
+        left: 10px;
+        border-top: 4px dotted #fff; }
+
+/* ShowMenu */
+.toggle.showMenu .toggle_menu {
+  opacity: 1;
+  transform: translateY(-178px); }
+
+.toggle.showMenu ~ .curtain {
+  opacity: 1;
+  position: fixed;
+  top: 0;
+  left: 0; }
+
+/* ShowClear */
+.toggle.showClear .clear_menu {
+  opacity: 1;
+  transform: translateY(-178px); }
+
+.toggle.showClear ~ .curtain {
+  opacity: 1;
+  position: fixed;
+  top: 0;
+  left: 0; }
