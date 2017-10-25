@@ -5,7 +5,7 @@ $gray4: #CACACA;
 $gray5: #B9B9B9;
 $gray6: #95989A;
 
-$darkBlue:#0D1929;
+$darkBlue:#0d213b;
 $darkBlue1:#2F4F90;
 $lightBlue2:#3879AB;
 $lightBlue1:#82BDEA;
@@ -15,6 +15,17 @@ $white:#fff;
 
 $warning1: #fbcba3;
 $warning2: #e78554;
+
+/* Basic ELEMENTS*/
+button{
+  cursor: pointer;
+  outline: none;
+  font-family: 'Catamaran', sans-serif;
+  appearance: none;
+  border: none;
+  background-color: transparent;
+  border-radius: 8px; 
+}
 
 
 *{
@@ -106,6 +117,7 @@ input[type="submit"]{
   width: calc(40% - 7px);
   background-color: $lightBlue2;
   border: 1px solid $lightBlue1;
+  border: none;
   color: $gray1;
   font-size: 20px;
   padding: 0;
@@ -114,6 +126,7 @@ input[type="submit"]{
   line-height: 41px;
   position: relative;
   top:2px;
+  border-radius: 8px;
 }
 
 .error{
@@ -122,7 +135,7 @@ input[type="submit"]{
 		border: 2px solid $warning2;
 		transition: all .5s ease;
 		outline-color: $warning1;
-		animation:smallBulge .5s linear;
+		animation:jelly .5s linear;
 	}
 	
 }
@@ -159,6 +172,7 @@ li{
   margin:0 0 0 0;
   width: 100%;
   position: relative;
+  opacity: 0;
   &.overdue{
     .task_wrapper::before{
       z-index: 35;
@@ -201,6 +215,7 @@ li.header{
     border-top: none;
     .drop_down{
       top:0;
+      height: 100%;
       .toggle_drop{
         border: none;
         border-top:none;
@@ -218,6 +233,7 @@ li.edit{
   border-bottom: 1px solid $gray4;
   border-top: 1px solid $gray4;
   width:100%;
+  transition: all .5s ease-out;
   
   &.header{
     height: 188px;
@@ -234,6 +250,8 @@ li.edit{
     margin: 0 0 0 50px;
     width: calc(88% - 50px);
     position: relative;
+    animation: slideDown .5s forwards ease-out;
+    transform-origin: 50% 0%;
     
     input{
       padding-top: 3px;
@@ -242,6 +260,8 @@ li.edit{
       height: 30px;
       top:-6px;
       position: relative;
+      opacity: 0;
+      animation: fadeIn .5s .25s forwards ease-out;
     }
     button{
 	    width: 52px;
@@ -249,7 +269,8 @@ li.edit{
 	    color: $gray5;
 	    left: calc(100% - 52px);
 	    bottom: 10px;
-	    
+	    opacity: 0;
+      animation: fadeIn .5s .25s forwards ease-out;
     }
   }
   
@@ -324,7 +345,7 @@ input[type="checkbox"]{
 	top: 7px;
 	left: 7px;
 	transform: rotate(-48deg);
-	transition: all .35s cubic-bezier(.09,1.47,.95,1.15);
+	transition: all .35s cubic-bezier(.09,1.47,.95,1.25);
 	stroke-linecap: round;
 }
 
@@ -336,9 +357,8 @@ input[type="checkbox"]{
   right: -132px;
   height: calc(100% + 1px) ;
   width: 120px;
-  transition: width 1s ease-out;
   background-color:$gray1;
-  transition: transform .25s ease-out;
+  transition: transform .25s ease-in;
   border-top: 1px solid $gray4;  
   .toggle_drop{
     position: absolute;
@@ -352,17 +372,15 @@ input[type="checkbox"]{
     cursor: pointer;
     transition: background-color .25s ease;
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
     align-items: center;
+    border-radius: 0;
     &::before{
       content: '';
       width: 4px;
       height: 36px;
       border-left: 4px $gray2 dotted;
       background-color: transparent;
-      //position: absolute;
-      top:15px;
-      left:10px;
     }
   }
   
@@ -380,10 +398,20 @@ input[type="checkbox"]{
   .drop_down{
     z-index: 50;
     transform: translateX(-120px);
+
     .toggle_drop{
       border-top: 1px solid $gray4;
       height: calc(100% + 1px);
+      left: -50px;
+      width: 50px;
       top:-1px;
+    }
+    
+    .menu{
+      border-left:1px solid $gray3;
+      .btn{
+        animation: jelly .5s .1s linear;
+      }
     }
   }
   
@@ -401,27 +429,21 @@ input[type="checkbox"]{
 .btn{
   height: 26px;
   background-color: $darkBlue;
-  border: 1px solid $darkBlue1;
+  background: linear-gradient($darkBlue1 1%,$darkBlue 40%,$darkBlue 100%);
+  border: none;
   color: $gray1;
   font-size: 12px;
-  margin: 20px 0 0 13px;
   margin: 0;
+  padding: 0 8px;
+  box-shadow: 0px 2px 2px rgba(13,33,59,.5);
+  transform-origin: 100% 50%;
   
   &.delete{
     background-color: $red;
-    border: 1px solid $lightRed;
-    margin: 20px 0px 0px 10px;
-    margin: 0;
+    background: linear-gradient( darken($lightRed, 5%) 1% ,$red 40%,$red 100%);
   }
   
 }
-
-button{
-  cursor: pointer;
-  outline: none;
-  font-family: 'Catamaran', sans-serif; 
-}
-
 
 .toggle{
   position: fixed;
@@ -480,16 +502,6 @@ button{
         text-transform: uppercase;
         font-size: 10px;
         letter-spacing: 1px;
-        button{
-          color: $white;
-          float: right;
-          text-transform: uppercase;
-          font-size: 10px;
-          letter-spacing: 1px;
-          font-weight: 300;
-          margin-right: 3px;
-          margin-top: 1px;
-        }
       }
     }
     
@@ -505,13 +517,18 @@ button{
         padding-bottom: 20px;
         &::before{right: 12px;}
        .foot_menu_header{
+	       text-align: right;
          margin-bottom: 20px;
-          background-color: $red;
+         background-color: $red;
+         p{
+           margin-right: 10px;
+           cursor: pointer;
+         }
         }
         
         button.clear{
           background-color: $red;
-          border: 1px solid $lightRed;
+          border: none;
           margin: 0;
           color: $white;
           padding: 10px;
@@ -525,7 +542,11 @@ button{
       margin: 0 auto;
       display: block;
       padding: 0 0 0 20px;
-      
+      cursor: pointer;
+      border-top:1px solid $gray3;
+      &:nth-of-type(1){
+        border-top:none;
+      }
       &:before{
         width: 10px;
         height: 10px;
@@ -542,6 +563,7 @@ button{
   }//foot_menu
   
 }//toggle
+
 
 .toggle_footer{
   width: 100%;
@@ -613,8 +635,29 @@ button{
 }
 
 label.flip:before{
-  animation: bulge .35s linear;
+  animation: bulge .5s linear;
 }
+
+li{
+  animation: slideUp .5s forwards ease-out;
+  &:nth-of-type(2){
+    animation-delay: .2s;
+  }
+  &:nth-of-type(3){
+    animation-delay: .4s;
+  }
+  &:nth-of-type(4){
+    animation-delay: .6s;
+  }
+  &:nth-of-type(5){
+    animation-delay: .8s;
+  }
+  &:nth-of-type(6){
+    animation-delay: .10s;
+  }
+}
+
+
 
 
 @keyframes bulge{
@@ -630,29 +673,83 @@ label.flip:before{
     transform: scale(1.2);
   }
   
-  100%{
-    transform: scale(1);
-  }
-}
-
-@keyframes smallBulge{
-  0%{
-    transform: scale(1);
-  }
-  
-  20%{
+  70%{
     transform: scale(.9);
   }
   
-  50%{
-    transform: scale(1.05);
+  85%{
+    transform: scale(1.1);
   }
   
   100%{
     transform: scale(1);
   }
+
 }
 
+
+@keyframes jelly{
+  0%{
+    transform: scaleX(.8);
+  }
+  
+  14%{
+    transform: scaleX(1.1);
+  }
+  
+  28%{
+    transform: scaleX(.9);
+  }
+  
+  42%{
+    transform: scaleX(1.05);
+  }
+  56%{
+    transform: scaleX(.95);
+  }
+  70%{
+    transform: scaleX(1.03);
+  }
+  84%{
+    transform: scaleX(.98);
+  }
+  100%{
+    transform: scaleX(1);
+  }
+}
+
+@keyframes slideUp{
+  0%{
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  
+  100%{
+    opacity: 1;
+    transform: translateY(0px);
+  }
+  
+}
+
+@keyframes slideDown{
+  0%{
+    opacity: 0;
+    transform: scaleY(0);
+  }
+  100%{
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}
+
+@keyframes fadeIn{
+  0%{
+    opacity: 0;
+  }
+  100%{
+    opacity: 1;
+  }
+}
 
 .cf:before,
 .cf:after {

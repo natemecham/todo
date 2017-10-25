@@ -1,3 +1,13 @@
+/* Basic ELEMENTS*/
+button {
+  cursor: pointer;
+  outline: none;
+  font-family: 'Catamaran', sans-serif;
+  appearance: none;
+  border: none;
+  background-color: transparent;
+  border-radius: 8px; }
+
 * {
   box-sizing: border-box; }
 
@@ -75,6 +85,7 @@ input[type="submit"] {
   width: calc(40% - 7px);
   background-color: #3879AB;
   border: 1px solid #82BDEA;
+  border: none;
   color: #EBEDED;
   font-size: 20px;
   padding: 0;
@@ -82,14 +93,15 @@ input[type="submit"] {
   letter-spacing: 1px;
   line-height: 41px;
   position: relative;
-  top: 2px; }
+  top: 2px;
+  border-radius: 8px; }
 
 .error input[type="text"] {
   background-color: #fbcba3;
   border: 2px solid #e78554;
   transition: all .5s ease;
   outline-color: #fbcba3;
-  animation: smallBulge .5s linear; }
+  animation: jelly .5s linear; }
 
 ul {
   width: 100%;
@@ -101,7 +113,7 @@ ul {
   overflow: hidden; }
 
 h2 {
-  background-color: #0D1929;
+  background-color: #0d213b;
   width: 100%;
   height: 36px;
   color: #fff;
@@ -120,7 +132,8 @@ li {
   list-style: none;
   margin: 0 0 0 0;
   width: 100%;
-  position: relative; }
+  position: relative;
+  opacity: 0; }
   li.overdue .task_wrapper::before {
     z-index: 35;
     width: 3px;
@@ -152,7 +165,8 @@ li.header {
   li.header .task_wrapper {
     border-top: none; }
     li.header .task_wrapper .drop_down {
-      top: 0; }
+      top: 0;
+      height: 100%; }
       li.header .task_wrapper .drop_down .toggle_drop {
         border: none;
         border-top: none; }
@@ -164,7 +178,8 @@ li.edit {
   height: 143px;
   border-bottom: 1px solid #CACACA;
   border-top: 1px solid #CACACA;
-  width: 100%; }
+  width: 100%;
+  transition: all .5s ease-out; }
   li.edit.header {
     height: 188px; }
   li.edit .task_wrapper {
@@ -175,20 +190,26 @@ li.edit {
   li.edit form {
     margin: 0 0 0 50px;
     width: calc(88% - 50px);
-    position: relative; }
+    position: relative;
+    animation: slideDown .5s forwards ease-out;
+    transform-origin: 50% 0%; }
     li.edit form input {
       padding-top: 3px;
       line-height: 14px;
       font-size: 14px;
       height: 30px;
       top: -6px;
-      position: relative; }
+      position: relative;
+      opacity: 0;
+      animation: fadeIn .5s .25s forwards ease-out; }
     li.edit form button {
       width: 52px;
       position: relative;
       color: #B9B9B9;
       left: calc(100% - 52px);
-      bottom: 10px; }
+      bottom: 10px;
+      opacity: 0;
+      animation: fadeIn .5s .25s forwards ease-out; }
   li.edit .drop_down {
     display: none; }
   li.edit + li .task_wrapper {
@@ -247,7 +268,7 @@ input[type="checkbox"] {
   top: 7px;
   left: 7px;
   transform: rotate(-48deg);
-  transition: all 0.35s cubic-bezier(0.09, 1.47, 0.95, 1.15);
+  transition: all 0.35s cubic-bezier(0.09, 1.47, 0.95, 1.25);
   stroke-linecap: round; }
 
 .drop_down {
@@ -256,9 +277,8 @@ input[type="checkbox"] {
   right: -132px;
   height: calc(100% + 1px);
   width: 120px;
-  transition: width 1s ease-out;
   background-color: #EBEDED;
-  transition: transform .25s ease-out;
+  transition: transform .25s ease-in;
   border-top: 1px solid #CACACA; }
   .drop_down .toggle_drop {
     position: absolute;
@@ -272,16 +292,15 @@ input[type="checkbox"] {
     cursor: pointer;
     transition: background-color .25s ease;
     display: flex;
-    justify-content: center;
-    align-items: center; }
+    justify-content: flex-end;
+    align-items: center;
+    border-radius: 0; }
     .drop_down .toggle_drop::before {
       content: '';
       width: 4px;
       height: 36px;
       border-left: 4px #E2E2E2 dotted;
-      background-color: transparent;
-      top: 15px;
-      left: 10px; }
+      background-color: transparent; }
   .drop_down .menu {
     height: 100%;
     width: 100%;
@@ -295,7 +314,13 @@ input[type="checkbox"] {
   .menuOpen .drop_down .toggle_drop {
     border-top: 1px solid #CACACA;
     height: calc(100% + 1px);
+    left: -50px;
+    width: 50px;
     top: -1px; }
+  .menuOpen .drop_down .menu {
+    border-left: 1px solid #DEDFDF; }
+    .menuOpen .drop_down .menu .btn {
+      animation: jelly .5s .1s linear; }
 
 .menuOpen.header .drop_down .toggle_drop {
   border-top: none;
@@ -303,29 +328,25 @@ input[type="checkbox"] {
 
 .btn {
   height: 26px;
-  background-color: #0D1929;
-  border: 1px solid #2F4F90;
+  background-color: #0d213b;
+  background: linear-gradient(#2F4F90 1%, #0d213b 40%, #0d213b 100%);
+  border: none;
   color: #EBEDED;
   font-size: 12px;
-  margin: 20px 0 0 13px;
-  margin: 0; }
+  margin: 0;
+  padding: 0 8px;
+  box-shadow: 0px 2px 2px rgba(13, 33, 59, 0.5);
+  transform-origin: 100% 50%; }
   .btn.delete {
     background-color: #EC2C42;
-    border: 1px solid #F0838F;
-    margin: 20px 0px 0px 10px;
-    margin: 0; }
-
-button {
-  cursor: pointer;
-  outline: none;
-  font-family: 'Catamaran', sans-serif; }
+    background: linear-gradient(#ed6c7a 1%, #EC2C42 40%, #EC2C42 100%); }
 
 .toggle {
   position: fixed;
   width: 100%;
   left: 0;
   right: 0;
-  background-color: #0D1929;
+  background-color: #0d213b;
   bottom: 0;
   height: 40px;
   z-index: 90; }
@@ -372,15 +393,6 @@ button {
         text-transform: uppercase;
         font-size: 10px;
         letter-spacing: 1px; }
-        .toggle .foot_menu .foot_menu_header p button {
-          color: #fff;
-          float: right;
-          text-transform: uppercase;
-          font-size: 10px;
-          letter-spacing: 1px;
-          font-weight: 300;
-          margin-right: 3px;
-          margin-top: 1px; }
     .toggle .foot_menu.toggle_menu::before {
       left: 12px; }
     .toggle .foot_menu.toggle_menu .foot_menu_header {
@@ -391,21 +403,29 @@ button {
       .toggle .foot_menu.clear_menu::before {
         right: 12px; }
       .toggle .foot_menu.clear_menu .foot_menu_header {
+        text-align: right;
         margin-bottom: 20px;
         background-color: #EC2C42; }
+        .toggle .foot_menu.clear_menu .foot_menu_header p {
+          margin-right: 10px;
+          cursor: pointer; }
       .toggle .foot_menu.clear_menu button.clear {
         background-color: #EC2C42;
-        border: 1px solid #F0838F;
+        border: none;
         margin: 0;
         color: #fff;
         padding: 10px;
         font-size: 12px; }
     .toggle .foot_menu label {
-      color: #0D1929;
+      color: #0d213b;
       width: 85%;
       margin: 0 auto;
       display: block;
-      padding: 0 0 0 20px; }
+      padding: 0 0 0 20px;
+      cursor: pointer;
+      border-top: 1px solid #DEDFDF; }
+      .toggle .foot_menu label:nth-of-type(1) {
+        border-top: none; }
       .toggle .foot_menu label:before {
         width: 10px;
         height: 10px;
@@ -472,7 +492,20 @@ button {
   left: 0; }
 
 label.flip:before {
-  animation: bulge .35s linear; }
+  animation: bulge .5s linear; }
+
+li {
+  animation: slideUp .5s forwards ease-out; }
+  li:nth-of-type(2) {
+    animation-delay: .2s; }
+  li:nth-of-type(3) {
+    animation-delay: .4s; }
+  li:nth-of-type(4) {
+    animation-delay: .6s; }
+  li:nth-of-type(5) {
+    animation-delay: .8s; }
+  li:nth-of-type(6) {
+    animation-delay: .10s; }
 
 @keyframes bulge {
   0% {
@@ -481,18 +514,52 @@ label.flip:before {
     transform: scale(0.8); }
   50% {
     transform: scale(1.2); }
+  70% {
+    transform: scale(0.9); }
+  85% {
+    transform: scale(1.1); }
   100% {
     transform: scale(1); } }
 
-@keyframes smallBulge {
+@keyframes jelly {
   0% {
-    transform: scale(1); }
-  20% {
-    transform: scale(0.9); }
-  50% {
-    transform: scale(1.05); }
+    transform: scaleX(0.8); }
+  14% {
+    transform: scaleX(1.1); }
+  28% {
+    transform: scaleX(0.9); }
+  42% {
+    transform: scaleX(1.05); }
+  56% {
+    transform: scaleX(0.95); }
+  70% {
+    transform: scaleX(1.03); }
+  84% {
+    transform: scaleX(0.98); }
   100% {
-    transform: scale(1); } }
+    transform: scaleX(1); } }
+
+@keyframes slideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px); }
+  100% {
+    opacity: 1;
+    transform: translateY(0px); } }
+
+@keyframes slideDown {
+  0% {
+    opacity: 0;
+    transform: scaleY(0); }
+  100% {
+    opacity: 1;
+    transform: scaleY(1); } }
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0; }
+  100% {
+    opacity: 1; } }
 
 .cf:before,
 .cf:after {

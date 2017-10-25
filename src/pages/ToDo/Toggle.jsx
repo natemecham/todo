@@ -55,7 +55,7 @@ const Toggle = (props) => {
           
         <div className="clear_menu foot_menu">
           <div className="foot_menu_header">
-            <p><button onClick={toggleClear}>Close</button></p>
+            <p onClick={toggleClear}>Close</p>
           </div>
           <button 
             className="clear text_btn" 
