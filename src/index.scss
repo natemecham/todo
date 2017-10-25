@@ -13,6 +13,9 @@ $red:#EC2C42;
 $lightRed:#F0838F;
 $white:#fff;
 
+$warning1: #fbcba3;
+$warning2: #e78554;
+
 
 *{
   box-sizing: border-box;
@@ -26,9 +29,40 @@ body{
   padding-bottom: 40px;
 }
 
+header{
+	width: 100%;
+	text-align: center;
+	display: inline-block;
+	h1{
+		font-size: 58px;
+		z-index: 2;
+		position: relative;
+	}
+	
+	&::before{
+		display: block;
+		content:'';
+		height: 0;
+		padding: 0;
+		padding-top: 90%;
+		width: 90%;
+		margin: 0;
+		left: 5%;
+		top:-5%;
+		background-color: $white;
+		opacity: .8;
+		border-radius: 100%;
+		position: absolute;
+		z-index: 1;
+		filter: blur(20px);
+	}
+}
+
 .todo_wrapper{
   width: 88%;
   margin: 0 auto;
+  z-index: 10;
+  position: relative;
 }
 
 form[name="new_task"]{
@@ -39,7 +73,8 @@ input{
   outline-color: $lightBlue1;
   font-family: 'Catamaran', sans-serif;
   font-weight: 400;
-  
+  appearance: none;
+  transition: all .5s ease;
 }
 
 input[type="text"],input[type="date"]{
@@ -47,11 +82,12 @@ input[type="text"],input[type="date"]{
   height: 40px;
   width: 100%;
   border:1px solid $gray4;
-  margin: 0 0 7px 0;
+  margin: 0 0 6px 0;
   font-size: 20px;
   color: $gray6;
   padding: 0;
   text-indent: 11px;
+  line-height: 40px;
   &::placeholder{
     color: $gray2;
   }
@@ -61,9 +97,11 @@ input[type="date"]{
   width: 60%;
   margin-right: 7px;
   text-indent: 5px;
+  display: inline-block;
 }
 
 input[type="submit"]{
+	display: inline-block;
   height: 40px;   
   width: calc(40% - 7px);
   background-color: $lightBlue2;
@@ -73,6 +111,20 @@ input[type="submit"]{
   padding: 0;
   text-transform: uppercase;
   letter-spacing: 1px;
+  line-height: 41px;
+  position: relative;
+  top:2px;
+}
+
+.error{
+	input[type="text"]{
+		background-color: $warning1;
+		border: 2px solid $warning2;
+		transition: all .5s ease;
+		outline-color: $warning1;
+		animation:smallBulge .5s linear;
+	}
+	
 }
 
 ul{
@@ -109,27 +161,38 @@ li{
   position: relative;
   &.overdue{
     .task_wrapper::before{
-      content: '';
       z-index: 35;
       width: 3px;
-      height: 100%;
       position: absolute;
-      left:-12px;
-      top:0;
       background-color: $red;
+      border-top:1px solid $lightRed;
       overflow: visible;
     }
     &.header{
     }
   }
-  .task_wrapper{
-    width: calc(100% - 24px);
-     margin:0 0 0px 12px;
-     padding-top: 12px;
-     border-top: 1px solid $gray4;
-     height: 67px;
+}
+
+.task_wrapper{
+  position: relative;
+  width: calc(100% - 24px);
+  padding:12px 0 0 0;
+  transition: transform .25s ease-out;
+  margin:0 0 0px 12px;
+  border-top: 1px solid $gray4;
+  min-height: 67px;
+  &::before{
+	content: '';
+	transition: all .25s ease;
+	position: absolute;
+	left:-12px;
+	top:0;
+	width: 0;
+	border-top:1px solid $white;
+	height: 100%;  
   }
 }
+
 
 li.header{
   min-height: 103px;
@@ -153,7 +216,7 @@ li.edit{
   padding-top:0;
   height: 143px;
   border-bottom: 1px solid $gray4;
-   border-top: 1px solid $gray4;
+  border-top: 1px solid $gray4;
   width:100%;
   
   &.header{
@@ -164,11 +227,13 @@ li.edit{
     width: calc(100% - 24px);
     margin:0 0 0px 12px;
     height: auto;
+    border-top: none;
   }
   
-  form{
+  form{	  
     margin: 0 0 0 50px;
-    width: 88%;
+    width: calc(88% - 50px);
+    position: relative;
     
     input{
       padding-top: 3px;
@@ -178,26 +243,27 @@ li.edit{
       top:-6px;
       position: relative;
     }
+    button{
+	    width: 52px;
+	    position: relative;
+	    color: $gray5;
+	    left: calc(100% - 52px);
+	    bottom: 10px;
+	    
+    }
   }
   
   .drop_down{
     display: none;
   }
   
-  & + li{
+  & + li .task_wrapper{
     border-top: none; 
   }
   
-}
+}//li.edit
 
 
-.task_wrapper{
-  position: relative;
-  width: 100%;
-  height: 55px;
-  padding:0;
-  transition: transform .25s ease-out;
-}
 
 input[type="checkbox"]{
 	position: absolute;
@@ -212,6 +278,7 @@ input[type="checkbox"]{
 	padding-top: 5px;
 	z-index: 9;
 	width:auto;
+	max-width: 90%;
 	font-size: 14px;
 	color: $gray6;
 }
@@ -258,6 +325,7 @@ input[type="checkbox"]{
 	left: 7px;
 	transform: rotate(-48deg);
 	transition: all .35s cubic-bezier(.09,1.47,.95,1.15);
+	stroke-linecap: round;
 }
 
 
@@ -269,7 +337,7 @@ input[type="checkbox"]{
   height: calc(100% + 1px) ;
   width: 120px;
   transition: width 1s ease-out;
-  background-color:$gray4;
+  background-color:$gray1;
   transition: transform .25s ease-out;
   border-top: 1px solid $gray4;  
   .toggle_drop{
@@ -283,20 +351,27 @@ input[type="checkbox"]{
     outline: none;
     cursor: pointer;
     transition: background-color .25s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     &::before{
       content: '';
       width: 4px;
       height: 36px;
       border-left: 4px $gray2 dotted;
       background-color: transparent;
-      position: absolute;
+      //position: absolute;
       top:15px;
       left:10px;
     }
   }
   
   .menu{
-    height: 67px;    
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;  
   }
   
 }
@@ -316,24 +391,27 @@ input[type="checkbox"]{
      .drop_down{
         .toggle_drop{
           border-top: none;
+           height: 100%;
         }
       }
     }
   
-}
+}//menuOpen
 
- .btn{
+.btn{
   height: 26px;
   background-color: $darkBlue;
   border: 1px solid $darkBlue1;
   color: $gray1;
   font-size: 12px;
   margin: 20px 0 0 13px;
+  margin: 0;
   
   &.delete{
     background-color: $red;
     border: 1px solid $lightRed;
     margin: 20px 0px 0px 10px;
+    margin: 0;
   }
   
 }
@@ -341,6 +419,7 @@ input[type="checkbox"]{
 button{
   cursor: pointer;
   outline: none;
+  font-family: 'Catamaran', sans-serif; 
 }
 
 
@@ -409,6 +488,7 @@ button{
           letter-spacing: 1px;
           font-weight: 300;
           margin-right: 3px;
+          margin-top: 1px;
         }
       }
     }
@@ -531,4 +611,54 @@ button{
     left: 0;
   }
 }
- 
+
+label.flip:before{
+  animation: bulge .35s linear;
+}
+
+
+@keyframes bulge{
+  0%{
+    transform: scale(1);
+  }
+  
+  20%{
+    transform: scale(.8);
+  }
+  
+  50%{
+    transform: scale(1.2);
+  }
+  
+  100%{
+    transform: scale(1);
+  }
+}
+
+@keyframes smallBulge{
+  0%{
+    transform: scale(1);
+  }
+  
+  20%{
+    transform: scale(.9);
+  }
+  
+  50%{
+    transform: scale(1.05);
+  }
+  
+  100%{
+    transform: scale(1);
+  }
+}
+
+
+.cf:before,
+.cf:after {
+    content: " ";
+    display: table;
+}
+
+.cf:after { clear: both; }
+.cf { *zoom: 1; }

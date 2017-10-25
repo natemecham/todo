@@ -8,9 +8,36 @@ body {
   position: relative;
   padding-bottom: 40px; }
 
+header {
+  width: 100%;
+  text-align: center;
+  display: inline-block; }
+  header h1 {
+    font-size: 58px;
+    z-index: 2;
+    position: relative; }
+  header::before {
+    display: block;
+    content: '';
+    height: 0;
+    padding: 0;
+    padding-top: 90%;
+    width: 90%;
+    margin: 0;
+    left: 5%;
+    top: -5%;
+    background-color: #fff;
+    opacity: .8;
+    border-radius: 100%;
+    position: absolute;
+    z-index: 1;
+    filter: blur(20px); }
+
 .todo_wrapper {
   width: 88%;
-  margin: 0 auto; }
+  margin: 0 auto;
+  z-index: 10;
+  position: relative; }
 
 form[name="new_task"] {
   margin-bottom: 25px; }
@@ -18,27 +45,32 @@ form[name="new_task"] {
 input {
   outline-color: #82BDEA;
   font-family: 'Catamaran', sans-serif;
-  font-weight: 400; }
+  font-weight: 400;
+  appearance: none;
+  transition: all .5s ease; }
 
 input[type="text"], input[type="date"] {
   background-color: #fff;
   height: 40px;
   width: 100%;
   border: 1px solid #CACACA;
-  margin: 0 0 7px 0;
+  margin: 0 0 6px 0;
   font-size: 20px;
   color: #95989A;
   padding: 0;
-  text-indent: 11px; }
+  text-indent: 11px;
+  line-height: 40px; }
   input[type="text"]::placeholder, input[type="date"]::placeholder {
     color: #E2E2E2; }
 
 input[type="date"] {
   width: 60%;
   margin-right: 7px;
-  text-indent: 5px; }
+  text-indent: 5px;
+  display: inline-block; }
 
 input[type="submit"] {
+  display: inline-block;
   height: 40px;
   width: calc(40% - 7px);
   background-color: #3879AB;
@@ -47,7 +79,17 @@ input[type="submit"] {
   font-size: 20px;
   padding: 0;
   text-transform: uppercase;
-  letter-spacing: 1px; }
+  letter-spacing: 1px;
+  line-height: 41px;
+  position: relative;
+  top: 2px; }
+
+.error input[type="text"] {
+  background-color: #fbcba3;
+  border: 2px solid #e78554;
+  transition: all .5s ease;
+  outline-color: #fbcba3;
+  animation: smallBulge .5s linear; }
 
 ul {
   width: 100%;
@@ -80,21 +122,30 @@ li {
   width: 100%;
   position: relative; }
   li.overdue .task_wrapper::before {
-    content: '';
     z-index: 35;
     width: 3px;
-    height: 100%;
+    position: absolute;
+    background-color: #EC2C42;
+    border-top: 1px solid #F0838F;
+    overflow: visible; }
+
+.task_wrapper {
+  position: relative;
+  width: calc(100% - 24px);
+  padding: 12px 0 0 0;
+  transition: transform .25s ease-out;
+  margin: 0 0 0px 12px;
+  border-top: 1px solid #CACACA;
+  min-height: 67px; }
+  .task_wrapper::before {
+    content: '';
+    transition: all .25s ease;
     position: absolute;
     left: -12px;
     top: 0;
-    background-color: #EC2C42;
-    overflow: visible; }
-  li .task_wrapper {
-    width: calc(100% - 24px);
-    margin: 0 0 0px 12px;
-    padding-top: 12px;
-    border-top: 1px solid #CACACA;
-    height: 67px; }
+    width: 0;
+    border-top: 1px solid #fff;
+    height: 100%; }
 
 li.header {
   min-height: 103px; }
@@ -119,10 +170,12 @@ li.edit {
   li.edit .task_wrapper {
     width: calc(100% - 24px);
     margin: 0 0 0px 12px;
-    height: auto; }
+    height: auto;
+    border-top: none; }
   li.edit form {
     margin: 0 0 0 50px;
-    width: 88%; }
+    width: calc(88% - 50px);
+    position: relative; }
     li.edit form input {
       padding-top: 3px;
       line-height: 14px;
@@ -130,17 +183,16 @@ li.edit {
       height: 30px;
       top: -6px;
       position: relative; }
+    li.edit form button {
+      width: 52px;
+      position: relative;
+      color: #B9B9B9;
+      left: calc(100% - 52px);
+      bottom: 10px; }
   li.edit .drop_down {
     display: none; }
-  li.edit + li {
+  li.edit + li .task_wrapper {
     border-top: none; }
-
-.task_wrapper {
-  position: relative;
-  width: 100%;
-  height: 55px;
-  padding: 0;
-  transition: transform .25s ease-out; }
 
 input[type="checkbox"] {
   position: absolute;
@@ -154,6 +206,7 @@ input[type="checkbox"] {
   padding-top: 5px;
   z-index: 9;
   width: auto;
+  max-width: 90%;
   font-size: 14px;
   color: #95989A; }
 
@@ -194,7 +247,8 @@ input[type="checkbox"] {
   top: 7px;
   left: 7px;
   transform: rotate(-48deg);
-  transition: all 0.35s cubic-bezier(0.09, 1.47, 0.95, 1.15); }
+  transition: all 0.35s cubic-bezier(0.09, 1.47, 0.95, 1.15);
+  stroke-linecap: round; }
 
 .drop_down {
   position: absolute;
@@ -203,7 +257,7 @@ input[type="checkbox"] {
   height: calc(100% + 1px);
   width: 120px;
   transition: width 1s ease-out;
-  background-color: #CACACA;
+  background-color: #EBEDED;
   transition: transform .25s ease-out;
   border-top: 1px solid #CACACA; }
   .drop_down .toggle_drop {
@@ -216,18 +270,24 @@ input[type="checkbox"] {
     height: 100%;
     outline: none;
     cursor: pointer;
-    transition: background-color .25s ease; }
+    transition: background-color .25s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center; }
     .drop_down .toggle_drop::before {
       content: '';
       width: 4px;
       height: 36px;
       border-left: 4px #E2E2E2 dotted;
       background-color: transparent;
-      position: absolute;
       top: 15px;
       left: 10px; }
   .drop_down .menu {
-    height: 67px; }
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center; }
 
 .menuOpen .drop_down {
   z-index: 50;
@@ -238,7 +298,8 @@ input[type="checkbox"] {
     top: -1px; }
 
 .menuOpen.header .drop_down .toggle_drop {
-  border-top: none; }
+  border-top: none;
+  height: 100%; }
 
 .btn {
   height: 26px;
@@ -246,15 +307,18 @@ input[type="checkbox"] {
   border: 1px solid #2F4F90;
   color: #EBEDED;
   font-size: 12px;
-  margin: 20px 0 0 13px; }
+  margin: 20px 0 0 13px;
+  margin: 0; }
   .btn.delete {
     background-color: #EC2C42;
     border: 1px solid #F0838F;
-    margin: 20px 0px 0px 10px; }
+    margin: 20px 0px 0px 10px;
+    margin: 0; }
 
 button {
   cursor: pointer;
-  outline: none; }
+  outline: none;
+  font-family: 'Catamaran', sans-serif; }
 
 .toggle {
   position: fixed;
@@ -315,7 +379,8 @@ button {
           font-size: 10px;
           letter-spacing: 1px;
           font-weight: 300;
-          margin-right: 3px; }
+          margin-right: 3px;
+          margin-top: 1px; }
     .toggle .foot_menu.toggle_menu::before {
       left: 12px; }
     .toggle .foot_menu.toggle_menu .foot_menu_header {
@@ -405,3 +470,37 @@ button {
   position: fixed;
   top: 0;
   left: 0; }
+
+label.flip:before {
+  animation: bulge .35s linear; }
+
+@keyframes bulge {
+  0% {
+    transform: scale(1); }
+  20% {
+    transform: scale(0.8); }
+  50% {
+    transform: scale(1.2); }
+  100% {
+    transform: scale(1); } }
+
+@keyframes smallBulge {
+  0% {
+    transform: scale(1); }
+  20% {
+    transform: scale(0.9); }
+  50% {
+    transform: scale(1.05); }
+  100% {
+    transform: scale(1); } }
+
+.cf:before,
+.cf:after {
+  content: " ";
+  display: table; }
+
+.cf:after {
+  clear: both; }
+
+.cf {
+  *zoom: 1; }

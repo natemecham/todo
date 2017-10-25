@@ -129,6 +129,13 @@ class ToDo extends React.Component {
     })
   }
   
+  closeMenu = () => {
+	  this.setState({
+      showClear: false,
+      showMenu: false
+    })
+  }
+  
 
   handleClearClick = () => {
     const new_todo = this.state.todo.slice();
@@ -200,6 +207,7 @@ class ToDo extends React.Component {
           show={this.state.show}
           onClearClick={this.handleClearClick}
           todo={this.state.todo}
+          closeMenu={this.closeMenu}
         />
       </div>
     );

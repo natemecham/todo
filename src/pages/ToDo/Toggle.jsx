@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames/bind';
 
 const Toggle = (props) => {
-  const { todo, onClick, onClearClick, showMenu, showClear, toggleMenu, toggleClear, onCloseClearMenu } = props;
+  const { todo, onClick, onClearClick, showMenu, showClear, toggleMenu, toggleClear, onCloseClearMenu, closeMenu } = props;
   
   const activeTodoCount = todo.reduce( (sum,todo ) => {
     return sum + (!todo.completed ? 1 : 0);
@@ -71,7 +71,7 @@ const Toggle = (props) => {
           <button className="toggle_clear" onClick={toggleClear}> </button>
         </div>   
       </div>
-      <div className="curtain"></div>
+      <div className="curtain" onClick={closeMenu}></div>
   </div>
   );
 }
