@@ -178,9 +178,10 @@ class ToDo extends React.Component {
   }
 
   render(){
-    const loading = this.state.loading ? 'loading' : '';
+    const loading = this.state.loading ? 'loading' : 'loaded';
     return(
-      <div className={"todo_wrapper page " + loading } >
+      
+      <div className={"todo_wrapper page " + loading} >
         <Input
           content={this.state.content}
           due={this.state.due}
@@ -209,7 +210,9 @@ class ToDo extends React.Component {
           todo={this.state.todo}
           closeMenu={this.closeMenu}
         />
+        <div className="load_wrapper"></div>
       </div>
+      
     );
   }
 }

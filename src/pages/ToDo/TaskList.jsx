@@ -39,7 +39,7 @@ const TaskList = (props) => {
           const overDue = isOverDue(today, data.due,data.completed);
           
           let showHeader;
-          if(index === 0 || data.due != array[index-1].due){
+          if(index === 0 || data.due !== array[index-1].due){
             showHeader = true;
           }else{
             showHeader = false;

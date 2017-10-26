@@ -72,7 +72,7 @@ class Task extends React.Component {
       'overdue': isOverDue,
     });
     
-    let header,headerClass;
+    let header;
     if(showHeader){
       header = <h2>{printDate(due)}</h2>;
     }

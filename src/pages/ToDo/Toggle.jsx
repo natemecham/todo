@@ -2,9 +2,9 @@ import React from 'react';
 import classNames from 'classnames/bind';
 
 const Toggle = (props) => {
-  const { todo, onClick, onClearClick, showMenu, showClear, toggleMenu, toggleClear, onCloseClearMenu, closeMenu } = props;
+  const { onClick, onClearClick, showMenu, showClear, toggleMenu, toggleClear, closeMenu } = props;
   
-  const activeTodoCount = todo.reduce( (sum,todo ) => {
+  /*const activeTodoCount = todo.reduce( (sum,todo ) => {
     return sum + (!todo.completed ? 1 : 0);
   }, 0);
 
@@ -13,7 +13,7 @@ const Toggle = (props) => {
   }, 0);
 
   const allTodoCount = todo.length;
-  
+  */
   const toggleClass = classNames({
     'showMenu': showMenu,
     'showClear': showClear,
