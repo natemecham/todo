@@ -335,7 +335,6 @@ input[type="checkbox"] {
   font-size: 12px;
   margin: 0;
   padding: 0 8px;
-  box-shadow: 0px 2px 2px rgba(13, 33, 59, 0.5);
   transform-origin: 100% 50%; }
   .btn.delete {
     background-color: #EC2C42;

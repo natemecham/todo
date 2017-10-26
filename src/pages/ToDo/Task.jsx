@@ -51,7 +51,8 @@ class Task extends React.Component {
     this.setState({isMenuOpen:!this.state.isMenuOpen});
   }
    
-  handleCancel = () =>{
+  handleCancel = (e) =>{
+    e.preventDefault();
      this.setState({isEdit: !this.state.isEdit});
   }
   
