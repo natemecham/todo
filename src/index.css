@@ -16,7 +16,10 @@ body {
   font-family: 'Catamaran', sans-serif;
   font-weight: 400;
   position: relative;
-  padding-bottom: 40px; }
+  padding-bottom: 40px;
+  width: 1px;
+  min-width: 100%;
+  *width: 100%; }
 
 header {
   width: 100%;
@@ -26,11 +29,11 @@ header {
     background-image: url(images/DoIt_logo.svg);
     background-repeat: no-repeat;
     background-position: center center;
-    background-size: 260px;
+    background-size: 200px;
     font-size: 58px;
     z-index: 2;
     display: block;
-    height: 250px;
+    height: 200px;
     position: relative;
     text-indent: 100%;
     white-space: nowrap;
@@ -138,7 +141,7 @@ ul {
   width: 100%;
   list-style: none;
   padding: 0;
-  margin: 0;
+  margin: 0 0 25px 0;
   background-color: #fff;
   box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.5);
   overflow: hidden; }
